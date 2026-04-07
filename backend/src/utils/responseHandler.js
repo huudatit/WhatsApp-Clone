@@ -1,4 +1,4 @@
-export default response = (res, statusCode, message, data = null) => {
+export const response = (res, statusCode, message, data = null) => {
   if (!res) {
     console.error("Kết quả trả về bị rỗng");
     return;

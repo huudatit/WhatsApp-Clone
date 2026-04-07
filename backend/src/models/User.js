@@ -1,25 +1,25 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  phoneNumber: {
-    type: String,
-    unique: true,
-    sparse: true,
-  },
+const userSchema = new mongoose.Schema(
+  {
+    phoneNumber: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
 
-  phoneSuffix: {
-    type: String,
-    unique: false,
-  },
+    phoneSuffix: {
+      type: String,
+      unique: false,
+    },
 
-  username: {
-    type: String,
-  },
+    username: {
+      type: String,
+    },
 
-  email: {
-    type: String,
-    lowercase: true,
-    validate: {
+    email: {
+      type: String,
+      lowercase: true,
       validate: {
         validator: function (value) {
           return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -27,50 +27,49 @@ const userSchema = new mongoose.Schema({
         message: "Invalid email address format",
       },
     },
-  },
 
-  emailOtp: {
-    type: String,
-  },
+    emailOtp: {
+      type: String,
+    },
 
-  emailOtpExpiry: {
-    type: Date,
-  },
+    emailOtpExpiry: {
+      type: Date,
+    },
 
-  avatarUrl: {
-    type: String,
-  },
+    avatarUrl: {
+      type: String,
+    },
 
-  avatarId: {
-    type: String,
-  },
+    avatarId: {
+      type: String,
+    },
 
-  bio: {
-    type: String,
-  },
+    bio: {
+      type: String,
+    },
 
-  lastSeen: {
-    type: Date,
-  },
+    lastSeen: {
+      type: Date,
+    },
 
-  isOnline: {
-    type: Boolean,
-    default: false,
-  },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
 
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
 
-  agreed: {
-    type: Boolean,
-    default: false,
+    agreed: {
+      type: Boolean,
+      default: false,
+    },
   },
-},
   {
     timestamps: true,
-  }
+  },
 );
 
 const User = mongoose.model("User", userSchema);
