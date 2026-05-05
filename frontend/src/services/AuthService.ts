@@ -43,22 +43,22 @@ export const AuthService = {
 
   //  lấy user (nếu có API này)
   fetchMe: async () => {
-    // const res = await api.get("/users/me", {
-    //   withCredentials: true,
-    // });
+    const res = await api.get("/users/me", {
+      withCredentials: true,
+    });
 
-    // return res.data.user;
+    return res.data.user;
     // FAKE USER
-    return {
-      _id: "user_me",
-      username: "ngocan",
-      email: "an@example.com",
-      displayName: "Trần Vũ Ngọc An",
-      avatarUrl: "https://i.pravatar.cc/150?u=me",
-      bio: "Đang code dạo",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    // return {
+    //   _id: "user_me",
+    //   username: "ngocan",
+    //   email: "an@example.com",
+    //   displayName: "Trần Vũ Ngọc An",
+    //   avatarUrl: "https://i.pravatar.cc/150?u=me",
+    //   bio: "Đang code dạo",
+    //   createdAt: new Date().toISOString(),
+    //   updatedAt: new Date().toISOString(),
+    // };
   },
 
   //  refresh accessToken

@@ -23,7 +23,7 @@ const ChatWelcomeScreen = () => {
             
             {/* Tiêu đề 1 */}
             <h1 className="text-3xl md:text-4xl font-extrabold mb-5 tracking-tight whitespace-nowrap bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">
-              WELCOME TO YOUR MOJI CHAT APP!
+              WELCOME TO CHAT APP!
             </h1>
             
             {/* Phụ đề 2 */}

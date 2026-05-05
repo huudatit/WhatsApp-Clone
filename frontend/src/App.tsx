@@ -4,25 +4,21 @@ import ChatAppPage from "./pages/ChatAppPage";
 import AuthPage from "./pages/AuthPage";
 import { Toaster } from "sonner";
 import { useAuthStore } from "./store/useAuthStore";
-import { useChatStore } from "./store/useChatStore";
+
+// Component bảo vệ Route Chat
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuthStore();
+  // Nếu chưa có user -> đẩy về trang login
+  return user ? <>{children}</> : <Navigate to="/login" replace />;
+};
 
 function App() {
-  const setUser = useAuthStore((state) => state.setUser);
-  const fetchConversations = useChatStore((state) => state.fetchConversations);
+  const { user, fetchMe } = useAuthStore();
 
+  // Khi tải trang, tự động check xem đã đăng nhập chưa (dựa vào cookie/token backend)
   useEffect(() => {
-    // 1. Tự động "đăng nhập" bằng cách nhét fake user vào store
-    setUser({
-      _id: "user_me",
-      username: "ngocan",
-      email: "an@example.com",
-      displayName: "Trần Vũ Ngọc An",
-      avatarUrl: "https://i.pravatar.cc/150?u=me",
-    });
-
-    // 2. Kích hoạt lấy danh sách hội thoại ảo luôn
-    fetchConversations();
-  }, [setUser, fetchConversations]);
+    fetchMe();
+  }, [fetchMe]);
 
   return (
     <>
@@ -30,14 +26,24 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          {/* default → chat */}
-          <Route path="/" element={<Navigate to="/chat" />} />
+          {/* Mặc định: Có user thì vào chat, chưa có thì ra login */}
+          <Route path="/" element={<Navigate to={user ? "/chat" : "/login"} replace />} />
 
-          {/* chat */}
-          <Route path="/chat" element={<ChatAppPage />} />
+          {/* Trang Login: Nếu đã login rồi thì tự đẩy về chat */}
+          <Route 
+            path="/login" 
+            element={user ? <Navigate to="/chat" replace /> : <AuthPage />} 
+          />
 
-          {/* login vẫn giữ nếu cần test */}
-          <Route path="/login" element={<AuthPage />} />
+          {/* Trang Chat: Được bảo vệ bởi PrivateRoute */}
+          <Route 
+            path="/chat" 
+            element={
+              <PrivateRoute>
+                <ChatAppPage />
+              </PrivateRoute>
+            } 
+          />
         </Routes>
       </BrowserRouter>
     </>

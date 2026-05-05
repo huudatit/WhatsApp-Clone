@@ -27,12 +27,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const {user} = useAuthStore ();
 
-  const fakeUser = {
-  _id: "u1",
-  displayName: "Haxx",
-  username: "haxx_dev",
-  email: "haxx@gmail.com",
-  avatarUrl: "https://i.pravatar.cc/150?img=5",
+ 
+  const extractedName = user?.email ? user.email.split('@')[0] : "User";
+
+  const currentUser = {
+    _id: user?._id || "",
+    displayName: extractedName, 
+    username: `${extractedName}`, 
+    email: user?.email || "",
+    avatarUrl: user?.avatarUrl || `https://ui-avatars.com/api/?name=${extractedName}&background=random`,
   };
 
   return (
@@ -121,7 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* Footer */}
       <SidebarFooter>
-        <NavUser user={fakeUser} />
+        <NavUser user={currentUser} />
       </SidebarFooter>
     </Sidebar>
   )
