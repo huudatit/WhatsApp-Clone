@@ -55,7 +55,7 @@ export function LoginForm({
             {/* EMAIL */}
             <Input
               type="email"
-              placeholder="Email"
+              placeholder="example@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="focus-visible:ring-blue-500"

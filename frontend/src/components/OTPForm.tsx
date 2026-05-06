@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import api from "@/lib/axios";
 import { useAuthStore } from "@/store/useAuthStore";
 import { z } from "zod";
+import { useNavigate } from "react-router";
 
 const schema = z.object({
   otp: z.string().min(4, "OTP không hợp lệ"),
@@ -13,11 +14,14 @@ export function OtpForm({ email }: { email: string }) {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
 
-  const setUser = useAuthStore((state) => state.setUser);
-    const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  // Khởi tạo navigate
+  const navigate = useNavigate();
 
-    const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const setUser = useAuthStore((state) => state.setUser);
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+
+  const handleVerify = async (e: React.FormEvent) => {
+  e.preventDefault();
 
     try {
         const res = await api.post("/auth/verify-otp", {
@@ -25,13 +29,18 @@ export function OtpForm({ email }: { email: string }) {
         otp,
         });
 
+        console.log("Dữ liệu Verify OTP:", res.data);
+
         const { accessToken, user } = res.data.data;
 
         setUser(user);
         setAccessToken(accessToken);
 
+        // ÉP CHUYỂN TRANG NGAY LẬP TỨC SAU KHI LƯU STATE
+        navigate("/chat");
     } catch (err) {
-        setError("OTP không đúng hoặc hết hạn");
+      console.error("Lỗi xác nhận OTP:", err);
+      setError("OTP không đúng hoặc hết hạn");
     }
 };
 
@@ -51,7 +60,7 @@ export function OtpForm({ email }: { email: string }) {
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      <Button className="bg-blue-600 hover:bg-blue-700">
+      <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
         Verify OTP
       </Button>
     </form>
