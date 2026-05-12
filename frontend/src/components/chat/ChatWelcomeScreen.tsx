@@ -11,7 +11,7 @@ const ChatWelcomeScreen = () => {
           <div className="text-center max-w-4xl mx-auto flex flex-col items-center">
             
             {/* Vòng tròn Icon với Hiệu ứng Đẹp (Không Animation) */}
-            <div className="size-28 mb-10 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center shadow-inner border border-blue-200/50 group relative">
+            <div className="size-28 mb-10 bg-linear-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center shadow-inner border border-blue-200/50 group relative">
               {/* Hiệu ứng bóng đổ mờ xung quanh (Glow) */}
               <div className="absolute -inset-2 bg-blue-400/20 rounded-full blur-2xl opacity-70"></div>
               
@@ -22,7 +22,7 @@ const ChatWelcomeScreen = () => {
             </div>
             
             {/* Tiêu đề 1 */}
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-5 tracking-tight whitespace-nowrap bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-4xl font-extrabold mb-5 tracking-tight whitespace-nowrap bg-linear-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">
               WELCOME TO CHAT APP!
             </h1>
             

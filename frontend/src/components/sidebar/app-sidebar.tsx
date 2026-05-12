@@ -1,10 +1,10 @@
-import * as React from "react"
+import * as React from "react";
 
-import { NavUser } from "@/components/sidebar/nav-user"
+import { NavUser } from "@/components/sidebar/nav-user";
 import CreateNewChat from "../chat/CreateNewChat";
 import NewGroupChatModel from "../chat/NewGroupChatModel";
 import GroupChatList from "../chat/GroupChatList";
-import AddFriendModel from "../chat/AddFriendModel";
+import AddFriendModel from "../chat/AddFriendModal";
 import DirectMessageList from "../chat/DirectMessageList";
 import {
   Sidebar,
@@ -19,31 +19,28 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useAuthStore } from "@/store/useAuthStore";
-import Logout from "../auth/Logout";
-import { LogOutIcon } from "lucide-react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import ConversationSkeleton from "../skeleton/ConversationSkeleton";
+import { useChatStore } from "@/stores/useChatStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
+  const { convoLoading } = useChatStore();
 
-  const {user} = useAuthStore ();
-
- 
-  const extractedName = user?.email ? user.email.split('@')[0] : "User";
+  const extractedName = user?.email ? user.email.split("@")[0] : "User";
 
   const currentUser = {
     _id: user?._id || "",
-    displayName: extractedName, 
-    username: `${extractedName}`, 
+    displayName: extractedName,
+    username: `${extractedName}`,
     email: user?.email || "",
-    avatarUrl: user?.avatarUrl || `https://ui-avatars.com/api/?name=${extractedName}&background=random`,
+    avatarUrl:
+      user?.avatarUrl ||
+      `https://ui-avatars.com/api/?name=${extractedName}&background=random`,
   };
 
   return (
-    <Sidebar
-      variant="inset"
-      className="bg-gradient-blue-300"
-      {...props}
-    >
+    <Sidebar variant="inset" className="bg-gradient-blue-300" {...props}>
       {/* Header */}
       <SidebarHeader>
         <SidebarMenu>
@@ -53,7 +50,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div
                   className="
                   flex w-full items-center px-3 py-3 justify-between 
-                  bg-gradient-to-r from-blue-500 to-cyan-500
+                  bg-linear-to-r from-blue-500 to-cyan-500
                   hover:from-blue-600 hover:to-cyan-600
                   rounded-xl transition shadow-md
                 "
@@ -70,7 +67,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* Content */}
       <SidebarContent className="beautiful-scrollbar">
-
         {/* New chat */}
         <SidebarGroup>
           <SidebarGroupContent>
@@ -94,9 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupAction>
 
           <SidebarGroupContent>
-            <div className="space-y-1">
-              <GroupChatList />
-            </div>
+            {convoLoading ? <ConversationSkeleton /> : <GroupChatList />}
           </SidebarGroupContent>
         </SidebarGroup>
 
@@ -119,7 +113,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
-
       </SidebarContent>
 
       {/* Footer */}
@@ -127,5 +120,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={currentUser} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

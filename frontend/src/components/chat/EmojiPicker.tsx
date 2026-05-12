@@ -23,6 +23,7 @@ const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
         <Picker
           theme={"light"}
           data={data}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onEmojiSelect={(emoji: any) => onChange(emoji.native)}
           emojiSize={24}
         />

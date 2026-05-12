@@ -73,11 +73,11 @@ const MessageItem = ({
                     "p-3",
                     message.isOwn 
                     // Đổi bg-blue-600 thành dải màu gradient
-                    ? "bg-gradient-to-br from-blue-500 to-blue-700 text-white border-0 rounded-2xl rounded-br-sm shadow-md" 
+                    ? "bg-linear-to-br from-blue-500 to-blue-700 text-white border-0 rounded-2xl rounded-br-sm shadow-md" 
                     : "chat-bubble-received"
                 )}
                 >
-                <p className="text-sm leading-relaxed break-words">{message.content}</p>
+                <p className="text-sm leading-relaxed wrap-break-word">{message.content}</p>
             </Card>
 
           {/* seen/ delivered */}

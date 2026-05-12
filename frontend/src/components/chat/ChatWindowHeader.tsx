@@ -1,16 +1,17 @@
-import { useChatStore } from "@/store/useChatStore";
+import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
 import { SidebarTrigger } from "../ui/sidebar";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Separator } from "../ui/separator";
 import UserAvatar from "./UserAvatar";
+import StatusBadge from "./StatusBadge";
 import GroupChatAvatar from "./GroupChatAvatar";
-//import { useSocketStore } from "@/stores/useSocketStore";
+import { useSocketStore } from "@/stores/useSocketStore";
 
 const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   const { conversations, activeConversationId } = useChatStore();
   const { user } = useAuthStore();
-  //const { onlineUsers } = useSocketStore();
+  const { onlineUsers } = useSocketStore();
 
   let otherUser;
 
@@ -51,6 +52,9 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
                   avatarUrl={otherUser?.avatarUrl || undefined}
                 />
                 {/* todo: socket io */}
+                <StatusBadge
+                  status={onlineUsers.includes(otherUser?._id ?? "") ? "online" : "offline"}
+                />
               </>
             ) : (
               <GroupChatAvatar

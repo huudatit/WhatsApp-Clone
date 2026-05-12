@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { LoginForm } from "@/components/login-form";
-import { OtpForm } from "@/components/OTPForm";
+import { LoginForm } from "@/components/auth/login-form";
+import { OtpForm } from "@/components/auth/OTPForm";
 import { MessageSquare } from "lucide-react"; 
 import LoginIllustration from "../assets/login-img.svg";
 
