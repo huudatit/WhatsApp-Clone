@@ -1,4 +1,4 @@
-import { useChatStore } from "@/store/useChatStore";
+import { useChatStore } from "@/stores/useChatStore";
 import ChatWelcomeScreen from "./ChatWelcomeScreen";
 import MessageItem from "./MessageItem";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -11,14 +11,16 @@ const ChatWindowBody = () => {
     messages: allMessages,
     fetchMessages,
   } = useChatStore();
-  const [lastMessageStatus, setLastMessageStatus] = useState<"delivered" | "seen">(
-    "delivered"
-  );
+  const [lastMessageStatus, setLastMessageStatus] = useState<
+    "delivered" | "seen"
+  >("delivered");
 
   const messages = allMessages[activeConversationId!]?.items ?? [];
   const reversedMessages = [...messages].reverse();
   const hasMore = allMessages[activeConversationId!]?.hasMore ?? false;
-  const selectedConvo = conversations.find((c) => c._id === activeConversationId);
+  const selectedConvo = conversations.find(
+    (c) => c._id === activeConversationId,
+  );
   const key = `chat-scroll-${activeConversationId}`;
 
   // ref
@@ -34,6 +36,7 @@ const ChatWindowBody = () => {
 
     const seenBy = selectedConvo?.seenBy ?? [];
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLastMessageStatus(seenBy.length > 0 ? "seen" : "delivered");
   }, [selectedConvo]);
 
@@ -41,7 +44,10 @@ const ChatWindowBody = () => {
   useLayoutEffect(() => {
     if (!messagesEndRef.current) return;
 
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
   }, [activeConversationId]);
 
   const fetchMoreMessages = async () => {
@@ -67,7 +73,7 @@ const ChatWindowBody = () => {
       JSON.stringify({
         scrollTop: container.scrollTop,
         scrollHeight: container.scrollHeight,
-      })
+      }),
     );
   };
 
@@ -83,7 +89,7 @@ const ChatWindowBody = () => {
         container.scrollTop = scrollTop;
       });
     }
-  }, [messages.length]);
+  }, [key, messages.length]);
 
   if (!selectedConvo) {
     return <ChatWelcomeScreen />;

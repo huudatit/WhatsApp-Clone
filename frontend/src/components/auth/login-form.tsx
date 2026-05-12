@@ -35,6 +35,7 @@ export function LoginForm({
 
       setError("");
       onSuccess(email); // chuyển sang OTP screen
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError("Gửi OTP thất bại");
     }

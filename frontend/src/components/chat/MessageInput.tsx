@@ -1,18 +1,16 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import type { Conversation } from "@/types/chat";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { ImagePlus, Send } from "lucide-react";
 import { Input } from "../ui/input";
 import EmojiPicker from "./EmojiPicker";
-import { useChatStore } from "@/store/useChatStore";
+import { useChatStore } from "@/stores/useChatStore";
 import { toast } from "sonner";
 
 const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   const { user } = useAuthStore();
-  // const { sendDirectMessage, sendGroupMessage } = useChatStore();
-  const { sendDirectMessage, sendGroupMessage, addMessage } = useChatStore();
-
+  const { sendDirectMessage, sendGroupMessage } = useChatStore();
   const [value, setValue] = useState("");
 
   if (!user) return;
@@ -22,45 +20,17 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
     const currValue = value;
     setValue("");
 
-    // try {
-    //   if (selectedConvo.type === "direct") {
-    //     const participants = selectedConvo.participants;
-    //     const otherUser = participants.filter((p) => p._id !== user._id)[0];
-    //     await sendDirectMessage(otherUser._id, currValue);
-    //   } else {
-    //     await sendGroupMessage(selectedConvo._id, currValue);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   toast.error("Lỗi xảy ra khi gửi tin nhắn. Bạn hãy thử lại!");
-    // }
-    
-    // FAKE GỬI MESSAGE
     try {
-    //  Tạo một message ảo để cập nhật UI ngay lập tức
-        const fakeMessage = {
-        _id: `temp_${Date.now()}`,
-        conversationId: selectedConvo._id,
-        senderId: user._id,
-        content: currValue,
-        createdAt: new Date().toISOString(),
-        isOwn: true,
-        };
-
-        if (selectedConvo.type === "direct") {
+      if (selectedConvo.type === "direct") {
         const participants = selectedConvo.participants;
         const otherUser = participants.filter((p) => p._id !== user._id)[0];
         await sendDirectMessage(otherUser._id, currValue);
-        } else {
+      } else {
         await sendGroupMessage(selectedConvo._id, currValue);
-        }
-
-        // Nhét tin nhắn ảo vào store để nó hiện lên màn hình
-        await addMessage(fakeMessage);
-
+      }
     } catch (error) {
-        console.error(error);
-        toast.error("Lỗi xảy ra khi gửi tin nhắn. Bạn hãy thử lại!");
+      console.error(error);
+      toast.error("Lỗi xảy ra khi gửi tin nhắn. Bạn hãy thử lại!");
     }
   };
 
@@ -72,7 +42,7 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   };
 
   return (
-    <div className="flex items-center gap-2 p-3 min-h-[56px] bg-background">
+    <div className="flex items-center gap-2 p-3 min-h-14 bg-background">
       <Button
         variant="ghost"
         size="icon"
@@ -83,11 +53,11 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
 
       <div className="flex-1 relative">
         <Input
-            onKeyPress={handleKeyPress}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="Soạn tin nhắn..."
-            className="pr-20 h-9 bg-white border-border/50 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-border/50 focus-visible:border-border/50 transition-smooth resize-none shadow-none"
+          onKeyPress={handleKeyPress}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Soạn tin nhắn..."
+          className="pr-20 h-9 bg-white border-border/50 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-border/50 focus-visible:border-border/50 transition-smooth resize-none shadow-none"
         ></Input>
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
           <Button
@@ -105,14 +75,14 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
         </div>
       </div>
 
-        <Button
-            onClick={sendMessage}
-            // Đổi sang bg-blue-600 và hiệu ứng hover tối màu hơn một chút (blue-700)
-            className="bg-blue-600 hover:bg-blue-700 shadow-sm transition-smooth hover:scale-105"
-            disabled={!value.trim()}
-            >
-            <Send className="size-4 text-white" />
-        </Button>
+      <Button
+        onClick={sendMessage}
+        // Đổi sang bg-blue-600 và hiệu ứng hover tối màu hơn một chút (blue-700)
+        className="bg-blue-600 hover:bg-blue-700 shadow-sm transition-smooth hover:scale-105"
+        disabled={!value.trim()}
+      >
+        <Send className="size-4 text-white" />
+      </Button>
     </div>
   );
 };

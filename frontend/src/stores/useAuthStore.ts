@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import type { AuthState } from "@/types/store";
 import { persist } from "zustand/middleware";
 import { useChatStore } from "./useChatStore";
-import { AuthService } from "@/services/AuthService";
+import { AuthService } from "@/services/authService";
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -42,6 +42,9 @@ export const useAuthStore = create<AuthState>()(
       verifyOtp: async (payload) => {
         try {
           set({ loading: true });
+
+          localStorage.clear();
+          useChatStore.getState().reset();
 
           const { accessToken, user } =
             await AuthService.verifyOtp(payload);
