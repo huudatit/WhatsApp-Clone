@@ -24,7 +24,7 @@ const UserAvatar = ({ type, name, avatarUrl, className }: IUserAvatarProps) => {
         type === "profile" && "size-24 text-3xl shadow-md",
       )}
     >
-      <AvatarImage src={avatarUrl} alt={name} />
+      <AvatarImage src={avatarUrl} alt={name} className="object-cover"/>
       <AvatarFallback className={`${bgColor} text-white font-semibold`}>
         {name.charAt(0)}
       </AvatarFallback>

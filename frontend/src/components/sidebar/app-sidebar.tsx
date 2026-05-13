@@ -22,11 +22,14 @@ import {
 import { useAuthStore } from "@/stores/useAuthStore";
 import ConversationSkeleton from "../skeleton/ConversationSkeleton";
 import { useChatStore } from "@/stores/useChatStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ProfileSidebar from "../profile/ProfileSidebar";
+import UserAvatar from "@/components/chat/UserAvatar";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
   const { convoLoading, fetchConversations } = useChatStore();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -127,7 +130,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
+      <SidebarFooter>
+        <button onClick={() => setIsProfileOpen(true)}>
+          <UserAvatar name={user?.username || ""} avatarUrl={user?.avatarUrl || ""} type={"sidebar"} />
+        </button>
+
+        <ProfileSidebar open={isProfileOpen} onOpenChange={setIsProfileOpen} />
+      </SidebarFooter>
     </Sidebar>
   );
 }

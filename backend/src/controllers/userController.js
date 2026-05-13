@@ -3,26 +3,26 @@ import { v2 as cloudinary } from "cloudinary";
 import { response } from "../utils/responseHandler.js";
 import User from "../models/User.js";
 
-export const getMe = async (req, res) => {
+export const authMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select(
-      "-emailOtp -emailOtpExpiry",
-    ); // Bỏ các trường nhạy cảm
+    const user = req.user; // lấy từ authMiddleware
 
-    if (!user) return response(res, 404, "Không tìm thấy user!");
-
-    return response(res, 200, "OK", { user });
+    return res.status(200).json({
+      user,
+    });
   } catch (error) {
-    console.error("Lỗi getMe:", error);
-    return response(res, 500, "Lỗi hệ thống");
+    console.error("Lỗi khi gọi authMe", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
 
-export const searchUser = async (req, res) => {
+export const searchUserByUsername = async (req, res) => {
   try {
     const { username } = req.query;
 
-    if (!username) return response(res, 400, "Thiếu username!");
+    if (!username || username.trim() === "") {
+      response(res, 404, "Cần cung cấp username trong query.!");
+    }
 
     const user = await User.findOne({ username }).select(
       "_id username email avatarUrl bio",
@@ -32,8 +32,8 @@ export const searchUser = async (req, res) => {
 
     return response(res, 200, "OK", { user });
   } catch (error) {
-    console.error("Lỗi searchUser:", error);
-    return response(res, 500, "Lỗi hệ thống");
+    console.error("Lỗi xảy ra khi searchUserByUsername", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
 

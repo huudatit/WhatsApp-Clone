@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import type { ConversationResponse, Message } from "@/types/chat";
+import type { Conversation, Message } from "@/types/chat";
 
 interface FetchMessageProps {
   messages: Message[];
@@ -9,9 +9,14 @@ interface FetchMessageProps {
 const pageLimit = 50;
 
 export const chatService = {
-  async fetchConversations(): Promise<ConversationResponse> {
+  async fetchConversations(): Promise<Conversation[]> {
     const res = await api.get("/conversations");
-    return res.data.data.conversations;
+
+    // Log để kiểm tra (bạn có thể xóa sau khi chạy thành công)
+    console.log("FULL response:", JSON.stringify(res.data).slice(0, 300));
+
+    // SỬA Ở ĐÂY: Truy cập trực tiếp res.data.conversations
+    return res.data?.conversations ?? [];
   },
 
   async fetchMessages(id: string, cursor?: string): Promise<FetchMessageProps> {

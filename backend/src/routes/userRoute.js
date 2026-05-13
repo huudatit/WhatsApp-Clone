@@ -1,13 +1,17 @@
 import express from 'express';
 import { upload } from '../middlewares/uploadMiddleware.js';
-import { getMe, searchUser, updateProfile } from '../controllers/userController.js';
+import {
+  authMe,
+  searchUserByUsername,
+  updateProfile,
+} from "../controllers/userController.js";
 
 const router = express.Router();
 
-router.get("/me", getMe);
+router.get("/me", authMe);
 
-router.get("/search", searchUser);
+router.get("/search", searchUserByUsername);
 
-router.put("/updateAvatar", upload.single("file"), updateProfile);
+router.patch("/profile", upload.single("file"), updateProfile);
 
 export default router;

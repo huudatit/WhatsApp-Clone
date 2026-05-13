@@ -30,8 +30,14 @@ export const useChatStore = create<ChatState>()(
         try {
           set({ convoLoading: true });
           const response = await chatService.fetchConversations();
-          const conversations = response?.data?.conversations || []; 
 
+          // SỬA Ở ĐÂY: Vì response đã là mảng từ service trả về, ta chỉ cần gán thẳng
+          const conversations = Array.isArray(response)
+            ? response
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : (response as any)?.conversations || [];
+
+          console.log("✅ Dữ liệu đã lưu vào store:", conversations); // Log ra để kiểm tra
           set({ conversations, convoLoading: false });
         } catch (error) {
           console.error("Lỗi xảy ra khi fetchConversations:", error);
