@@ -16,7 +16,7 @@ export const GroupChatCard = ({ convo } : {convo: Conversation}) => {
     const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);
     if (!messages[id]) {
-      await fetchMessages();
+      await fetchMessages(id);
     }
   };
 
@@ -36,7 +36,7 @@ export const GroupChatCard = ({ convo } : {convo: Conversation}) => {
       }
     subtitle={
       <p className="text-sm truncate text-muted-foreground">
-        {convo.participants.length} thành viên
+        {convo.participants?.length || 0} thành viên
       </p>
     }
   />

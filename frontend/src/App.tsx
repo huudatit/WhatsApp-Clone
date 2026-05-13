@@ -4,21 +4,36 @@ import ChatAppPage from "./pages/ChatAppPage";
 import AuthPage from "./pages/AuthPage";
 import { Toaster } from "sonner";
 import { useAuthStore } from "./store/useAuthStore";
+import { useSocketStore } from "./store/useSocketStore";
+import { useChatStore } from "./store/useChatStore";
 
 // Component bảo vệ Route Chat
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuthStore();
-  // Nếu chưa có user -> đẩy về trang login
+  const { user, isCheckingAuth } = useAuthStore(); 
+
+  if (isCheckingAuth) {
+    return <div className="h-screen w-screen flex items-center justify-center">Đang kiểm tra đăng nhập...</div>;
+  }
+
   return user ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 function App() {
   const { user, fetchMe } = useAuthStore();
-
+  const { accessToken } = useAuthStore();
+  const { connectSocket, disconnectSocket } = useSocketStore();
   // Khi tải trang, tự động check xem đã đăng nhập chưa (dựa vào cookie/token backend)
   useEffect(() => {
     fetchMe();
   }, [fetchMe]);
+
+  useEffect(() => {
+    if (accessToken) {
+      connectSocket();
+    }
+    
+    return () => disconnectSocket();
+  }, [accessToken]);
 
   return (
     <>

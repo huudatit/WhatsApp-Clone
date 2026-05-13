@@ -5,16 +5,17 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Separator } from "../ui/separator";
 import UserAvatar from "./UserAvatar";
 import GroupChatAvatar from "./GroupChatAvatar";
-//import { useSocketStore } from "@/stores/useSocketStore";
+import { useSocketStore } from "@/store/useSocketStore";
+import { Trash2 } from "lucide-react";
 
 const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
-  const { conversations, activeConversationId } = useChatStore();
+  const { conversations = [], activeConversationId, removeConversation } = useChatStore();
   const { user } = useAuthStore();
-  //const { onlineUsers } = useSocketStore();
+  const { onlineUsers } = useSocketStore();
 
   let otherUser;
 
-  chat = chat ?? conversations.find((c) => c._id === activeConversationId);
+  chat = chat ?? conversations?.find((c) => c._id === activeConversationId);
 
   if (!chat) {
     return (
@@ -25,7 +26,7 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   }
 
   if (chat.type === "direct") {
-    const otherUsers = chat.participants.filter((p) => p._id !== user?._id);
+    const otherUsers = chat?.participants?.filter((p) => p._id !== user?._id);
     otherUser = otherUsers.length > 0 ? otherUsers[0] : null;
 
     if (!user || !otherUser) return;
@@ -65,6 +66,18 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
             {chat.type === "direct" ? otherUser?.displayName : chat.group?.name}
           </h2>
         </div>
+      </div>
+      {/* NÚT XÓA */}
+      <div className="flex items-center" title="Xóa cuộc trò chuyện">
+        <Trash2 
+          className="size-5 text-slate-400 hover:text-red-500 cursor-pointer transition-colors" 
+          onClick={() => {
+            if (window.confirm("Bạn có chắc chắn muốn xóa đoạn chat này không?")) {
+              removeConversation(chat._id);
+            }
+          }}
+          // Xóa dòng title ở đây đi là hết lỗi đỏ
+        />
       </div>
     </header>
   );

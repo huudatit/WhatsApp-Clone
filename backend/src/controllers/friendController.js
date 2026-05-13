@@ -116,17 +116,19 @@ export const getAllFriends = async (req, res) => {
       .populate("userB", "_id username avatarUrl")
       .lean();
     
-    if (!friendships.length) return response(res, 200, { friends: [] });
+    // ĐỔI SANG res.status().json()
+    if (!friendships.length) return res.status(200).json({ friends: [] });
 
     const friends = friendships.map((f) => 
       f.userA._id.toString() === userId.toString() ? f.userB : f.userA
     );
 
-    return response(res, 200, { friends });
+    // ĐỔI SANG res.status().json()
+    return res.status(200).json({ friends });
     
   } catch (error) {
     console.error("Lỗi khi lấy danh sách bạn bè", error);
-    return response(res, 500, "Lỗi hệ thống");
+    return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
 
@@ -141,10 +143,11 @@ export const getFriendRequests = async (req, res) => {
       FriendRequest.find({ to: userId }).populate("from", populateFields)
     ]);
 
-    return response(res, 200, { sent, received });
+    // BỎ HÀM response(), DÙNG res.status().json()
+    return res.status(200).json({ sent, received });
 
   } catch (error) {
     console.error("Lỗi khi lấy danh sách yêu cầu kết bạn", error);
-    return response(res, 500, "Lỗi hệ thống");
+    return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };

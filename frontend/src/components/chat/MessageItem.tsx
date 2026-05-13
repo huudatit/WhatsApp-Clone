@@ -1,5 +1,5 @@
 import { cn, formatMessageTime } from "@/lib/utils";
-import type { Conversation, Message, Participant } from "@/types/chat";
+import type { Conversation, Message } from "@/types/chat";
 import UserAvatar from "./UserAvatar";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
@@ -29,10 +29,10 @@ const MessageItem = ({
 
   const isGroupBreak = isShowTime || message.senderId !== prev?.senderId;
 
-  const participant = selectedConvo.participants.find(
-    (p: Participant) => p._id.toString() === message.senderId.toString()
+ const participant = selectedConvo.participants?.find(
+    (p: any) => p?._id?.toString() === message?.senderId?.toString()
   );
-
+  
   return (
     <>
       {/* time */}
@@ -68,6 +68,13 @@ const MessageItem = ({
             message.isOwn ? "items-end" : "items-start"
           )}
         >
+          {/* HIỂN THỊ TÊN */}
+          {!message.isOwn && isGroupBreak && (
+            <span className="text-[11px] text-muted-foreground ml-1 mb-0.5">
+              {participant?.displayName || "Friend"}
+            </span>
+          )}
+
             <Card
                 className={cn(
                     "p-3",

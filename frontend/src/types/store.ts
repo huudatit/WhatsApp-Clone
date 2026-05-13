@@ -1,12 +1,13 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware"; 
+
 import type { Conversation, Message } from "./chat";
 import type { Friend, FriendRequest, User } from "./user";
+import type { Socket } from "socket.io-client";
 
 export interface AuthState {
   accessToken: string | null;
   user: User | null;
   loading: boolean;
+  isCheckingAuth: boolean; 
 
   setAccessToken: (accessToken: string) => void;
   setUser: (user: User) => void;
@@ -63,5 +64,38 @@ export interface ChatState {
   ) => Promise<void>;
   // add message
   addMessage: (message: Message) => Promise<void>;
-  // update convo                 
+  // update convo    
+  updateConversation: (conversation: unknown) => void;
+  markAsSeen: () => Promise<void>;
+  addConvo: (convo: Conversation) => void;
+  createConversation: (
+    type: "group" | "direct",
+    name: string,
+    memberIds: string[]
+  ) => Promise<void>; 
+  removeConversation: (conversationId: string) => Promise<void>;            
 }
+
+export interface SocketState {
+  socket: Socket | null;
+  onlineUsers: string[];
+  connectSocket: () => void;
+  disconnectSocket: () => void;
+}
+
+export interface FriendState {
+  friends: Friend[];
+  loading: boolean;
+  receivedList: FriendRequest[];
+  sentList: FriendRequest[];
+  searchByUsername: (username: string) => Promise<User | null>;
+  addFriend: (to: string, message?: string) => Promise<string>;
+  getAllFriendRequests: () => Promise<void>;
+  acceptRequest: (requestId: string) => Promise<void>;
+  declineRequest: (requestId: string) => Promise<void>;
+  getFriends: () => Promise<void>;
+}
+
+// export interface UserState {
+//   updateAvatarUrl: (formData: FormData) => Promise<void>;
+// }

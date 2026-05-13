@@ -7,7 +7,7 @@ interface GroupChatAvatarProps {
   type: "chat" | "sidebar";
 }
 
-const GroupChatAvatar = ({ participants, type }: GroupChatAvatarProps) => {
+const GroupChatAvatar = ({ participants = [], type }: GroupChatAvatarProps) => {
   const avatars = [];
   const limit = Math.min(participants.length, 4);
 
@@ -28,7 +28,7 @@ const GroupChatAvatar = ({ participants, type }: GroupChatAvatarProps) => {
       {avatars}
 
       {/* nếu nhiều hơn 4 avatar thì render dấu ... */}
-      {participants.length > limit && (
+      {participants?.length > limit && (
         <div className="flex items-center z-10 justify-center size-8 rounded-full bg-muted ring-2 ring-background text-muted-foreground">
           <Ellipsis className="size-4" />
         </div>

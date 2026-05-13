@@ -11,7 +11,9 @@ const DirectMessageCard = ({ convo }: { convo : Conversation }) => {
 
     if(!user) return null;
 
-    const otherUser= convo.participants.find((p) => p._id !== user._id);
+    const otherUser = convo.participants.find(
+      (p) => String(p._id) !== String(user._id)
+    );
     if(!otherUser) return;
 
     const lastMessage = convo.lastMessage?.content ?? "";
@@ -19,7 +21,7 @@ const DirectMessageCard = ({ convo }: { convo : Conversation }) => {
     const handleSelectConversation = async (id:string) => {
         setActiveConversation(id);
         if(!messages[id]) {
-          await fetchMessages();
+          await fetchMessages(id);
         }
     }
 

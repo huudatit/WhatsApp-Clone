@@ -20,43 +20,18 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   const sendMessage = async () => {
     if (!value.trim()) return;
     const currValue = value;
-    setValue("");
+    setValue(""); // Xóa trắng ô input ngay lập tức cho mượt
 
-    // try {
-    //   if (selectedConvo.type === "direct") {
-    //     const participants = selectedConvo.participants;
-    //     const otherUser = participants.filter((p) => p._id !== user._id)[0];
-    //     await sendDirectMessage(otherUser._id, currValue);
-    //   } else {
-    //     await sendGroupMessage(selectedConvo._id, currValue);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   toast.error("Lỗi xảy ra khi gửi tin nhắn. Bạn hãy thử lại!");
-    // }
-    
-    // FAKE GỬI MESSAGE
     try {
-    //  Tạo một message ảo để cập nhật UI ngay lập tức
-        const fakeMessage = {
-        _id: `temp_${Date.now()}`,
-        conversationId: selectedConvo._id,
-        senderId: user._id,
-        content: currValue,
-        createdAt: new Date().toISOString(),
-        isOwn: true,
-        };
-
-        if (selectedConvo.type === "direct") {
+      if (selectedConvo.type === "direct") {
         const participants = selectedConvo.participants;
         const otherUser = participants.filter((p) => p._id !== user._id)[0];
+        
+        // Gọi thẳng hàm trong Store. Nó sẽ tự lấy data thật từ DB đập lên màn hình!
         await sendDirectMessage(otherUser._id, currValue);
-        } else {
+      } else {
         await sendGroupMessage(selectedConvo._id, currValue);
-        }
-
-        // Nhét tin nhắn ảo vào store để nó hiện lên màn hình
-        await addMessage(fakeMessage);
+      }
 
     } catch (error) {
         console.error(error);

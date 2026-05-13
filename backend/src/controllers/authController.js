@@ -197,3 +197,16 @@ export const refreshToken = async (req, res) => {
     return response(res, 500, "Lỗi hệ thống");
   }
 }
+
+export const getMe = async (req, res) => {
+  try {
+    if (!req.user) {
+      return response(res, 401, "Chưa xác thực");
+    }
+    // Trả về thông tin user đã được authMiddleware nhét vào req
+    return response(res, 200, "Lấy thông tin thành công", req.user);
+  } catch (error) {
+    console.error("Lỗi ở getMe:", error);
+    return response(res, 500, "Lỗi hệ thống");
+  }
+};

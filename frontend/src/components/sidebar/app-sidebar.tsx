@@ -4,7 +4,7 @@ import { NavUser } from "@/components/sidebar/nav-user"
 import CreateNewChat from "../chat/CreateNewChat";
 import NewGroupChatModel from "../chat/NewGroupChatModel";
 import GroupChatList from "../chat/GroupChatList";
-import AddFriendModel from "../chat/AddFriendModel";
+import AddFriendModel from "../chat/AddFriendModal";
 import DirectMessageList from "../chat/DirectMessageList";
 import {
   Sidebar,
@@ -20,14 +20,23 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store/useAuthStore";
-import Logout from "../auth/Logout";
-import { LogOutIcon } from "lucide-react";
+import { useEffect } from "react";
+import { useChatStore } from "@/store/useChatStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const {user} = useAuthStore ();
 
- 
+  // 1. Kéo hàm lấy danh sách chat từ Store ra 
+  const { fetchConversations } = useChatStore(); 
+
+  // 2. Dùng useEffect để tự động gọi API lấy danh sách khi Sidebar xuất hiện
+  useEffect(() => {
+    if (user) {
+      fetchConversations();
+    }
+  }, [fetchConversations, user]);
+
   const extractedName = user?.email ? user.email.split('@')[0] : "User";
 
   const currentUser = {
@@ -86,11 +95,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             Nhóm chat
           </SidebarGroupLabel>
 
-          <SidebarGroupAction
-            title="Tạo Nhóm"
-            className="cursor-pointer text-blue-400 hover:text-blue-300"
-          >
-            <NewGroupChatModel />
+          <SidebarGroupAction title="Tạo Nhóm">
+            <NewGroupChatModel /> 
           </SidebarGroupAction>
 
           <SidebarGroupContent>

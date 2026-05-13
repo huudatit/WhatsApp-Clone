@@ -1,6 +1,6 @@
 import express from 'express';
 import { sendDirectMessage, sendGroupMessage } from '../controllers/messageController.js';
-import { checkGroupMembership } from '../middlewares/friendMiddlware.js';
+import { checkGroupMembership } from '../middlewares/friendMiddleware.js';
 
 const router = express.Router();
 

@@ -11,6 +11,7 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       loading: false,
+      isCheckingAuth: true,
 
       setAccessToken: (accessToken) => set({ accessToken }),
       setUser: (user) => set({ user }),
@@ -76,15 +77,22 @@ export const useAuthStore = create<AuthState>()(
 
       fetchMe: async () => {
         try {
-          set({ loading: true });
+          if (!get().accessToken) {
+            set({ isCheckingAuth: false });
+            return;
+          }
 
+          set({ isCheckingAuth: true });
           const user = await AuthService.fetchMe();
           set({ user });
-        } catch (error) {
-          console.error(error);
-          get().clearState();
+        } catch (error: any) {
+          console.error("Lỗi fetchMe:", error);
+          
+          if (error.response?.status === 401 || error.response?.status === 403) {
+            get().clearState();
+          }
         } finally {
-          set({ loading: false });
+          set({ isCheckingAuth: false });
         }
       },
 
@@ -102,6 +110,7 @@ export const useAuthStore = create<AuthState>()(
       name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
+        accessToken: state.accessToken,
       }),
     }
   )
