@@ -98,29 +98,29 @@ export const createConversation = async (req, res) => {
 export const getConversations = async (req, res) => {
   try {
     const userId = req.user._id;
-    const conversation = await Conversation.find({
+    const conversations = await Conversation.find({
       "participants.userId": userId,
     })
       .sort({ lastMessageAt: -1, updatedAt: -1 })
       .populate({
         path: "participants.userId",
-        select: "username avatarUrl",
+        select: "displayName avatarUrl",
       })
       .populate({
         path: "lastMessage.senderId",
-        select: "username avatarUrl",
+        select: "displayName avatarUrl",
       })
       .populate({
         path: "seenBy",
-        select: "username avatarUrl",
+        select: "displayName avatarUrl",
       });
-    
-    const formatted = conversation.map((convo) => {
+
+    const formatted = conversations.map((convo) => {
       const participants = (convo.participants || []).map((p) => ({
         _id: p.userId?._id,
-        username: p.userId?.username,
+        displayName: p.userId?.displayName,
         avatarUrl: p.userId?.avatarUrl ?? null,
-        joinedAt: p.joinedAt
+        joinedAt: p.joinedAt,
       }));
 
       return {
@@ -130,13 +130,10 @@ export const getConversations = async (req, res) => {
       };
     });
 
-    return response(res, 200, "Lấy danh sách hội thoại thành công", {
-      conversations: formatted,
-    });
-    
+    return res.status(200).json({ conversations: formatted });
   } catch (error) {
     console.error("Lỗi xảy ra khi lấy conversations", error);
-    return response(res, 500, "Lỗi hệ thống");
+    return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
 
@@ -147,12 +144,14 @@ export const getMessages = async (req, res) => {
 
     const query = { conversationId };
 
-    if (cursor) query.createdAt = { $lt: new Date(cursor) };
+    if (cursor) {
+      query.createdAt = { $lt: new Date(cursor) };
+    }
 
     let messages = await Message.find(query)
       .sort({ createdAt: -1 })
       .limit(Number(limit) + 1);
-    
+
     let nextCursor = null;
 
     if (messages.length > Number(limit)) {
@@ -167,7 +166,6 @@ export const getMessages = async (req, res) => {
       messages,
       nextCursor,
     });
-
   } catch (error) {
     console.error("Lỗi xảy ra khi lấy messages", error);
     return response(res, 500, "Lỗi hệ thống");
@@ -196,17 +194,19 @@ export const markAsSeen = async (req, res) => {
     const conversation = await Conversation.findById(conversationId).lean();
 
     if (!conversation) {
-      return response(res, 404, "Conversation không tồn tại");
+      return res.status(404).json({ message: "Conversation không tồn tại" });
     }
 
     const last = conversation.lastMessage;
 
     if (!last) {
-      return response(res, 200, "Không có tin nhắn để mark as seen");
+      return res
+        .status(200)
+        .json({ message: "Không có tin nhắn để mark as seen" });
     }
 
     if (last.senderId.toString() === userId) {
-      return response(res, 200, "Sender không cần mark as seen");
+      return res.status(200).json({ message: "Sender không cần mark as seen" });
     }
 
     const updated = await Conversation.findByIdAndUpdate(

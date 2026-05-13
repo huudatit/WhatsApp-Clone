@@ -7,21 +7,22 @@ import {
 
 import type { User } from "@/types/user";
 import Logout from "../auth/Logout";
+import UserAvatar from "../chat/UserAvatar";
 
 export function NavUser({ user }: { user: User }) {
+  if (!user) return null;
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <div className="flex items-center justify-between px-2 py-2">
-
           {/* LEFT: avatar + name */}
           <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={user.avatarUrl} alt={user.username} />
-              <AvatarFallback>
-                {user.username?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar
+              name={user.username}
+              avatarUrl={user.avatarUrl} 
+              type={"sidebar"}
+            />
 
             <div className="flex flex-col leading-tight">
               <span className="text-sm text-black font-medium truncate">
@@ -37,7 +38,6 @@ export function NavUser({ user }: { user: User }) {
           <div className="flex items-center gap-1 text-red-400 hover:text-red-300 cursor-pointer">
             <Logout />
           </div>
-
         </div>
       </SidebarMenuItem>
     </SidebarMenu>

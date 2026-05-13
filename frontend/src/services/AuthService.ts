@@ -47,18 +47,7 @@ export const AuthService = {
       withCredentials: true,
     });
 
-    return res.data.data.user;
-    // FAKE USER
-    // return {
-    //   _id: "user_me",
-    //   username: "ngocan",
-    //   email: "an@example.com",
-    //   displayName: "Trần Vũ Ngọc An",
-    //   avatarUrl: "https://i.pravatar.cc/150?u=me",
-    //   bio: "Đang code dạo",
-    //   createdAt: new Date().toISOString(),
-    //   updatedAt: new Date().toISOString(),
-    // };
+    return res.data?.data?.user || res.data?.data || res.data?.user || res.data;
   },
 
   //  refresh accessToken
