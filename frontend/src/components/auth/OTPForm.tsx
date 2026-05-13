@@ -3,12 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import api from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { z } from "zod";
 import { useNavigate } from "react-router";
 
-const schema = z.object({
-  otp: z.string().min(4, "OTP không hợp lệ"),
-});
 
 export function OtpForm({ email }: { email: string }) {
   const [otp, setOtp] = useState("");
