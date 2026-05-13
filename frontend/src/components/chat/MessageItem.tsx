@@ -30,18 +30,11 @@ const MessageItem = ({
   const isGroupBreak = isShowTime || message.senderId !== prev?.senderId;
 
   const participant = selectedConvo.participants.find(
-    (p: Participant) => p._id.toString() === message.senderId.toString()
+    (p: Participant) => p._id.toString() === message.senderId.toString(),
   );
 
   return (
     <>
-      {/* time */}
-      {isShowTime && (
-        <span className="flex justify-center text-xs text-muted-foreground px-1">
-          {formatMessageTime(new Date(message.createdAt))}
-        </span>
-      )}
-
       <div
         className={cn(
           "flex gap-2 message-bounce mt-1",
@@ -70,34 +63,72 @@ const MessageItem = ({
         >
           <Card
             className={cn(
-              "p-3",
+              // Nếu chỉ có ảnh thì giảm bớt padding để ảnh trông to và đẹp hơn
+              message.imgUrl && !message.content ? "p-1" : "p-3",
               message.isOwn
-                ? // Đổi bg-blue-600 thành dải màu gradient
-                  "bg-linear-to-br from-blue-500 to-blue-700 text-white border-0 rounded-2xl rounded-br-sm shadow-md"
+                ? "bg-linear-to-br from-blue-500 to-blue-700 text-white border-0 rounded-2xl rounded-br-sm shadow-md"
                 : "chat-bubble-received",
             )}
           >
-            <p className="text-sm leading-relaxed wrap-break-word">
-              {message.content}
-            </p>
+            {/* HIỂN THỊ HÌNH ẢNH NẾU CÓ */}
+            {message.imgUrl && (
+              <div
+                className={cn(
+                  "overflow-hidden rounded-xl",
+                  message.content ? "mb-2" : "", // Tạo khoảng cách nếu có chữ bên dưới
+                )}
+              >
+                <img
+                  src={message.imgUrl}
+                  alt="Attachment"
+                  className="max-w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity min-w-[150px] min-h-[100px]"
+                  loading="lazy"
+                  onClick={() => window.open(message.imgUrl!, "_blank")}
+                />
+              </div>
+            )}
+
+            {/* HIỂN THỊ VĂN BẢN NẾU CÓ */}
+            {message.content && (
+              <p className="text-sm leading-relaxed wrap-break-word px-1">
+                {message.content}
+              </p>
+            )}
           </Card>
 
           {/* seen/ delivered */}
           {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
-            <Badge
-              variant="outline"
-              className={cn(
-                "text-xs px-1.5 py-0.5 h-4 border-0",
-                lastMessageStatus === "seen"
-                  ? "bg-primary/20 text-primary"
-                  : "bg-muted text-muted-foreground",
+            <div className="flex flex-col items-end gap-1 mt-1">
+              <Badge
+                variant="outline"
+                className={cn(
+                  "text-[10px] px-1.5 py-0 h-4 border-0",
+                  lastMessageStatus === "seen"
+                    ? "bg-primary/10 text-primary"
+                    : "bg-muted/50 text-muted-foreground",
+                )}
+              >
+                {lastMessageStatus === "seen" ? "Đã xem" : "Đã gửi"}
+              </Badge>
+
+              {/* HIỂN THỊ THỜI GIAN SEEN NẾU CÓ */}
+              {lastMessageStatus === "seen" && selectedConvo.lastMessageAt && (
+                <span className="text-[10px] text-muted-foreground pr-1">
+                  {formatMessageTime(new Date(selectedConvo.lastMessageAt))}
+                </span>
               )}
-            >
-              {lastMessageStatus}
-            </Badge>
+            </div>
           )}
         </div>
       </div>
+
+      {isShowTime && (
+        <div className="flex justify-center my-4">
+          <span className="text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
+            {formatMessageTime(new Date(message.createdAt))}
+          </span>
+        </div>
+      )}
     </>
   );
 };

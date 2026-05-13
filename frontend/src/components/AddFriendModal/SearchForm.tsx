@@ -3,7 +3,6 @@ import type { IFormValues } from "../chat/AddFriendModal";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogFooter } from "../ui/dialog";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 
@@ -56,7 +55,7 @@ const SearchForm = ({
       </div>
 
       <DialogFooter>
-        <DialogClose asChild>
+        
           <Button
             type="button"
             variant="outline"
@@ -65,7 +64,6 @@ const SearchForm = ({
           >
             Cancel
           </Button>
-        </DialogClose>
 
         <Button
           type="submit"

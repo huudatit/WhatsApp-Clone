@@ -26,3 +26,20 @@ export const uploadImageFromBuffer = (buffer, options) => {
     uploadStream.end(buffer);
   })
 }
+
+// uploadMiddleware.js
+export const uploadToCloudinary = (buffer, folder = "messages") => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: `whatsapp_clone/${folder}`,
+        resource_type: "auto", 
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    uploadStream.end(buffer);
+  });
+};

@@ -53,12 +53,12 @@ export interface ChatState {
   sendDirectMessage: (
     recipientId: string,
     content: string,
-    imgUrl?: string,
+    file?: File | null,
   ) => Promise<void>;
   sendGroupMessage: (
     conversationId: string,
     content: string,
-    imgUrl?: string,
+    file?: File | null,
   ) => Promise<void>;
   // add message
   addMessage: (message: Message) => Promise<void>;
@@ -73,6 +73,7 @@ export interface ChatState {
     name: string,
     memberIds: string[],
   ) => Promise<void>;
+  deleteConversation: (convoId: string) => Promise<void>;
 }
 
 export interface SocketState {
@@ -93,6 +94,11 @@ export interface FriendState {
   acceptRequest: (requestId: string) => Promise<void>;
   declineRequest: (requestId: string) => Promise<void>;
   getFriends: () => Promise<void>;
+  unreadRequestCount: number;
+  incrementUnreadRequest: () => void;
+  clearUnreadRequest: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addNewReceivedRequest: (request: any) => void;
 }
 
 export interface UserState {

@@ -13,8 +13,6 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   const { user } = useAuthStore();
   const { onlineUsers } = useSocketStore();
 
-  let otherUser;
-
   chat = chat ?? conversations.find((c) => c._id === activeConversationId);
 
   if (!chat) {
@@ -25,12 +23,14 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
     );
   }
 
-  if (chat.type === "direct") {
-    const otherUsers = chat.participants.filter((p) => p._id !== user?._id);
-    otherUser = otherUsers.length > 0 ? otherUsers[0] : null;
+  const otherUser = chat.participants?.find((p) => p._id !== user?._id);
 
-    if (!user || !otherUser) return;
-  }
+  const isGroup = chat.type === "group" || !!chat.group;
+
+  const chatName = isGroup
+    ? chat.group?.name
+    : otherUser?.username || "Người dùng";
+  
 
   return (
     <header className="sticky top-0 z-10 px-4 py-2 flex items-center bg-background">
@@ -40,18 +40,19 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
           orientation="vertical"
           className="mr-2 data-[orientation=vertical]:h-4"
         />
-
+{/* 
         <div className="p-2 w-full flex items-center gap-3">
-          {/* avatar */}
+          <SidebarTrigger className="md:hidden -ml-2" /> */}
+
+        <div className="flex items-center gap-3 cursor-pointer">
           <div className="relative">
-            {chat.type === "direct" ? (
+            {!isGroup ? (
               <>
                 <UserAvatar
                   type={"sidebar"}
-                  name={otherUser?.username || "WSC"}
+                  name={otherUser?.username || "User"}
                   avatarUrl={otherUser?.avatarUrl || undefined}
                 />
-                {/* todo: socket io */}
                 <StatusBadge
                   status={
                     onlineUsers.includes(otherUser?._id ?? "")
@@ -69,9 +70,7 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
           </div>
 
           {/* name */}
-          <h2 className="font-semibold text-foreground">
-            {chat.type === "direct" ? otherUser?.username : chat.group?.name}
-          </h2>
+          <h2 className="font-semibold text-foreground">{chatName}</h2>
         </div>
       </div>
     </header>

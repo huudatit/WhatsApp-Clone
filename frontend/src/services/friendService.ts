@@ -7,8 +7,28 @@ export const friendService = {
   },
 
   async sendFriendRequest(to: string, message?: string) {
-    const res = await api.post("/friends/requests", { to, message });
-    return res.data.message;
+    // const res = await api.post("/friends/requests", { to, message });
+    // return res.data.message;
+    try {
+      const res = await api.post("/friends/requests", { to, message });
+      return res.data.message;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // Bóc tách lỗi chi tiết từ Backend trả về
+      if (error.response && error.response.data) {
+        const backendMessage = error.response.data.message;
+        console.error("🐞 [DEBUG API] Nguyên nhân từ khóa:", backendMessage);
+
+        // Ném lỗi với message chuẩn để UI (Store/Modal) có thể hiển thị
+        throw new Error(backendMessage);
+      }
+
+      console.error(
+        "🐞 [DEBUG API] Lỗi mạng hoặc server không phản hồi:",
+        error,
+      );
+      throw error;
+    }
   },
 
   async getAllFriendRequest() {

@@ -41,6 +41,7 @@ export interface Conversation {
 }
 
 export interface ConversationResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   conversations: Conversation[];
 }

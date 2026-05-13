@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Conversation } from "@/types/chat";
 import { useChatStore } from "@/stores/useChatStore";
 import ChatCard from "./ChatCard";
@@ -15,6 +16,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
     setActiveConversation,
     messages,
     fetchMessages,
+    deleteConversation,
   } = useChatStore();
   const { onlineUsers } = useSocketStore();
 
@@ -24,12 +26,31 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   if (!otherUser) return null;
 
   const unreadCount = convo.unreadCounts[user._id];
-  const lastMessage = convo.lastMessage?.content ?? "";
+
+  const lastMessageObj = convo.lastMessage;
+  const senderId =
+    typeof (lastMessageObj as any)?.senderId === "string"
+      ? (lastMessageObj as any).senderId
+      : (lastMessageObj as any)?.senderId?._id;
+
+  const isMe = senderId === user._id;
+
+  const lastMessageDisplay = lastMessageObj?.content
+    ? isMe
+      ? `Bạn: ${lastMessageObj.content}`
+      : lastMessageObj.content
+    : "Bắt đầu cuộc trò chuyện";
 
   const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);
     if (!messages[id]) {
       await fetchMessages();
+    }
+  };
+
+  const handleDeleteConversation = () => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa cuộc trò chuyện này?")) {
+      deleteConversation(convo._id);
     }
   };
 
@@ -69,11 +90,12 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
               : "text-muted-foreground",
           )}
         >
-          {lastMessage}
+          {lastMessageDisplay}
         </p>
       }
+      onDelete={handleDeleteConversation}
     />
   );
-};
+};;
 
 export default DirectMessageCard;
