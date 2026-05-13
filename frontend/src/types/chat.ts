@@ -1,13 +1,13 @@
 export interface Participant {
   _id: string;
-  displayName: string;
+  username: string;
   avatarUrl?: string | null;
   joinedAt: string;
 }
 
 export interface SeenUser {
   _id: string;
-  displayName?: string;
+  username?: string;
   avatarUrl?: string | null;
 }
 
@@ -22,7 +22,7 @@ export interface LastMessage {
   createdAt: string;
   sender: {
     _id: string;
-    displayName: string;
+    username: string;
     avatarUrl?: string | null;
   };
 }
@@ -41,6 +41,7 @@ export interface Conversation {
 }
 
 export interface ConversationResponse {
+  data: any;
   conversations: Conversation[];
 }
 

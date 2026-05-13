@@ -45,7 +45,7 @@ const MessageItem = ({
       <div
         className={cn(
           "flex gap-2 message-bounce mt-1",
-          message.isOwn ? "justify-end" : "justify-start"
+          message.isOwn ? "justify-end" : "justify-start",
         )}
       >
         {/* avatar */}
@@ -54,7 +54,7 @@ const MessageItem = ({
             {isGroupBreak && (
               <UserAvatar
                 type="chat"
-                name={participant?.displayName ?? "Friend"}
+                name={participant?.username ?? "Friend"}
                 avatarUrl={participant?.avatarUrl ?? undefined}
               />
             )}
@@ -65,20 +65,22 @@ const MessageItem = ({
         <div
           className={cn(
             "max-w-xs lg:max-w-md space-y-1 flex flex-col",
-            message.isOwn ? "items-end" : "items-start"
+            message.isOwn ? "items-end" : "items-start",
           )}
         >
-            <Card
-                className={cn(
-                    "p-3",
-                    message.isOwn 
-                    // Đổi bg-blue-600 thành dải màu gradient
-                    ? "bg-linear-to-br from-blue-500 to-blue-700 text-white border-0 rounded-2xl rounded-br-sm shadow-md" 
-                    : "chat-bubble-received"
-                )}
-                >
-                <p className="text-sm leading-relaxed wrap-break-word">{message.content}</p>
-            </Card>
+          <Card
+            className={cn(
+              "p-3",
+              message.isOwn
+                ? // Đổi bg-blue-600 thành dải màu gradient
+                  "bg-linear-to-br from-blue-500 to-blue-700 text-white border-0 rounded-2xl rounded-br-sm shadow-md"
+                : "chat-bubble-received",
+            )}
+          >
+            <p className="text-sm leading-relaxed wrap-break-word">
+              {message.content}
+            </p>
+          </Card>
 
           {/* seen/ delivered */}
           {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
@@ -88,7 +90,7 @@ const MessageItem = ({
                 "text-xs px-1.5 py-0.5 h-4 border-0",
                 lastMessageStatus === "seen"
                   ? "bg-primary/20 text-primary"
-                  : "bg-muted text-muted-foreground"
+                  : "bg-muted text-muted-foreground",
               )}
             >
               {lastMessageStatus}

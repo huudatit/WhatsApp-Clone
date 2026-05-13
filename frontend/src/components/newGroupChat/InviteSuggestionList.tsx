@@ -24,11 +24,11 @@ const IniviteSuggestionList = ({
         >
           <UserAvatar
             type="chat"
-            name={friend.displayName}
+            name={friend.username}
             avatarUrl={friend.avatarUrl}
           />
 
-          <span className="font-medium">{friend.displayName}</span>
+          <span className="font-medium">{friend.username}</span>
         </div>
       ))}
     </div>

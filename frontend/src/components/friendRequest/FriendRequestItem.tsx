@@ -25,9 +25,9 @@ const FriendRequestItem = ({
   return (
     <div className="flex items-center justify-between rounded-lg shadow-md border border-primary-foreground p-3">
       <div className="flex items-center gap-3">
-        <UserAvatar type="sidebar" name={info.displayName} />
+        <UserAvatar type="sidebar" name={info.username} />
         <div>
-          <p className="font-medium">{info.displayName}</p>
+          <p className="font-medium">{info.username}</p>
           <p className="text-sm text-muted-foreground">@{info.username}</p>
         </div>
       </div>

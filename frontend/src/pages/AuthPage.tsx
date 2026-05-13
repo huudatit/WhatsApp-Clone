@@ -12,14 +12,14 @@ export default function AuthPage() {
     <div className="min-h-screen w-full flex bg-white font-sans">
       
       {/* NỬA TRÁI - MINH HỌA */}
-      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-blue-50 via-white to-blue-100 flex-col items-center justify-center p-12 relative overflow-hidden">
+      <div className="hidden lg:flex w-1/2 bg-linear-to-br from-blue-50 via-white to-blue-100 flex-col items-center justify-center p-12 relative overflow-hidden">
         
         {/* Vòng tròn trang trí background */}
         <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-50"></div>
         <div className="absolute bottom-10 right-10 w-48 h-48 bg-cyan-200 rounded-full mix-blend-multiply filter blur-xl opacity-50"></div>
 
         {/* Logo Icon */}
-        <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 rounded-2xl shadow-lg mb-8 z-10">
+        <div className="bg-linear-to-r from-blue-500 to-cyan-500 p-4 rounded-2xl shadow-lg mb-8 z-10">
           <MessageSquare className="w-10 h-10 text-white" />
         </div>
         

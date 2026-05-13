@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useChatStore } from "@/stores/useChatStore";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
 
@@ -13,8 +14,14 @@ const ProtectedRoute = () => {
       await refresh();
     }
 
-    if (accessToken && !user) {
+    const currentToken = useAuthStore.getState().accessToken;
+
+    if (currentToken && !user) {
       await fetchMe();
+    }
+
+    if (currentToken) {
+      await useChatStore.getState().fetchConversations();
     }
 
     setStarting(false);

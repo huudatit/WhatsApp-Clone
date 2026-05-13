@@ -47,7 +47,7 @@ export const AuthService = {
       withCredentials: true,
     });
 
-    return res.data.user;
+    return res.data.data.user;
     // FAKE USER
     // return {
     //   _id: "user_me",

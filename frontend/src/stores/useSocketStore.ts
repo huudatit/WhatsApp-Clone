@@ -35,10 +35,10 @@ export const useSocketStore = create<SocketState>((set, get) => ({
 
       const lastMessage = {
         _id: conversation.lastMessage._id,
-        content: conversation.lastMessage.createdAt,
-        createAt: conversation.lastMessage.createdAt,
+        content: conversation.lastMessage.content,
+        createdAt: conversation.lastMessage.createdAt,
         sender: {
-          _id: conversation.LastMessage.senderId,
+          _id: conversation.lastMessage.senderId,
           displayname: "",
           avatarUrl: null,
         },

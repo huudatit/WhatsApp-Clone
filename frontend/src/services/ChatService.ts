@@ -11,7 +11,7 @@ const pageLimit = 50;
 export const chatService = {
   async fetchConversations(): Promise<ConversationResponse> {
     const res = await api.get("/conversations");
-    return res.data;
+    return res.data.data.conversations;
   },
 
   async fetchMessages(id: string, cursor?: string): Promise<FetchMessageProps> {
@@ -19,7 +19,7 @@ export const chatService = {
       `/conversations/${id}/messages?limit=${pageLimit}&cursor=${cursor}`,
     );
 
-    return { messages: res.data.messages, cursor: res.data.nextCursor };
+    return { messages: res.data.data.messages, cursor: res.data.data.nextCursor };
   },
 
   async sendDirectMessage(
@@ -35,7 +35,7 @@ export const chatService = {
       conversationId,
     });
 
-    return res.data.message;
+    return res.data.data.message;
   },
 
   async sendGroupMessage(
@@ -48,12 +48,12 @@ export const chatService = {
       content,
       imgUrl,
     });
-    return res.data.message;
+    return res.data.data.message;
   },
 
   async markAsSeen(conversationId: string) {
     const res = await api.patch(`/conversations/${conversationId}/seen`);
-    return res.data;
+    return res.data.data;
   },
 
   async createConversation(
@@ -62,6 +62,6 @@ export const chatService = {
     memberIds: string[],
   ) {
     const res = await api.post("/conversations", { type, name, memberIds });
-    return res.data.conversation;
+    return res.data.data.conversation;
   },
 };

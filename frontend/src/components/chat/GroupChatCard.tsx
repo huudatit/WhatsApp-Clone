@@ -16,15 +16,20 @@ export const GroupChatCard = ({ convo }: { convo: Conversation }) => {
 
   if (!user) return null;
 
-  // const firstMember = convo.participants?.[0];
-  const unreadCount = convo.unreadCounts[user._id];
-  const name = convo.group?.name ?? "";
+  const unreadCount = convo.unreadCounts?.[user._id] || 0;
+  const name = convo.group?.name || "Nhóm không tên";
+
   const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);
     if (!messages[id]) {
-      await fetchMessages();
+      await fetchMessages(id);
     }
   };
+
+  const uniqueParticipants =
+    convo.participants?.filter(
+      (v, i, a) => a.findIndex((t) => t._id === v._id) === i,
+    ) || [];
 
   return (
     <ChatCard
@@ -41,12 +46,12 @@ export const GroupChatCard = ({ convo }: { convo: Conversation }) => {
       leftSection={
         <>
           {unreadCount > 0 && <UnreadCountBadge unreadCount={unreadCount} />}
-          <GroupChatAvatar participants={convo.participants} type="chat" />
+          <GroupChatAvatar participants={uniqueParticipants} type="chat" />
         </>
       }
       subtitle={
         <p className="text-sm truncate text-muted-foreground">
-          {convo.participants.length} thành viên
+          {uniqueParticipants.length} thành viên
         </p>
       }
     />
