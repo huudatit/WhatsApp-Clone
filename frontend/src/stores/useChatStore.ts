@@ -34,8 +34,8 @@ export const useChatStore = create<ChatState>()(
           // SỬA Ở ĐÂY: Vì response đã là mảng từ service trả về, ta chỉ cần gán thẳng
           const conversations = Array.isArray(response)
             ? response
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            : (response as any)?.conversations || [];
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (response as any)?.data?.conversations || [];
 
           console.log("✅ Dữ liệu đã lưu vào store:", conversations); // Log ra để kiểm tra
           set({ conversations, convoLoading: false });
@@ -95,13 +95,13 @@ export const useChatStore = create<ChatState>()(
           set({ messageLoading: false });
         }
       },
-      sendDirectMessage: async (recipientId, content, imgUrl) => {
+      sendDirectMessage: async (recipientId, content, file) => {
         try {
           const { activeConversationId } = get();
           await chatService.sendDirectMessage(
             recipientId,
             content,
-            imgUrl,
+            file ?? undefined,
             activeConversationId || undefined,
           );
           set((state) => ({
@@ -113,9 +113,9 @@ export const useChatStore = create<ChatState>()(
           console.error("Lỗi xảy ra khi gửi direct message", error);
         }
       },
-      sendGroupMessage: async (conversationId, content, imgUrl) => {
+      sendGroupMessage: async (conversationId, content, file) => {
         try {
-          await chatService.sendGroupMessage(conversationId, content, imgUrl);
+          await chatService.sendGroupMessage(conversationId, content, file ?? undefined);
           set((state) => ({
             conversations: state.conversations.map((c) =>
               c._id === get().activeConversationId ? { ...c, seenBy: [] } : c,
@@ -245,6 +245,40 @@ export const useChatStore = create<ChatState>()(
           );
         } finally {
           set({ loading: false });
+        }
+      },
+
+      deleteConversation: async (convoId: string) => {
+        console.log(`\n[DEBUG 3 - Store] 🟡 Bắt đầu xóa convoId: ${convoId}`);
+        try {
+          console.log(
+            "[DEBUG 3 - Store] 🟡 Đang gửi request DELETE lên Backend...",
+          );
+
+          await chatService.deleteConversation(convoId); // Giờ hàm này đã có!
+
+          console.log(
+            "[DEBUG 3 - Store] 🟢 Đã nhận response xóa thành công từ API!",
+          );
+
+          set((state) => {
+            const updatedMessages = { ...state.messages };
+            delete updatedMessages[convoId];
+
+            return {
+              conversations: state.conversations.filter(
+                (c) => c._id !== convoId,
+              ),
+              activeConversationId:
+                state.activeConversationId === convoId
+                  ? null
+                  : state.activeConversationId,
+              messages: updatedMessages,
+            };
+          });
+          console.log("[DEBUG 3 - Store] 🟢 Đã cập nhật xong UI!");
+        } catch (error) {
+          console.error("[DEBUG 3 - Store] 🔴 Lỗi khi xóa đoạn chat:", error);
         }
       },
     }),

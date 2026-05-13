@@ -3,6 +3,8 @@ import { io, type Socket } from 'socket.io-client';
 import type { SocketState } from "@/types/store";
 import { useAuthStore } from "./useAuthStore";
 import { useChatStore } from './useChatStore';
+import { useFriendStore } from './useFriendStore';
+import { toast } from 'sonner';
 
 const baseURL = import.meta.env.VITE_SOCKET_URL;
 
@@ -71,6 +73,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     socket.on("new-group", (conversation) => {
       useChatStore.getState().addConvo(conversation);
       socket.emit("join-conversation", conversation._id);
+    });
+
+    socket.on("new-friend-request", (newRequest) => {
+      useFriendStore.getState().incrementUnreadRequest();
+      useFriendStore.getState().addNewReceivedRequest(newRequest);
+      toast.info(`Bạn có lời mời kết bạn mới!`);
     });
   },
 

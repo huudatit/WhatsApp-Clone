@@ -55,11 +55,22 @@ export const useFriendStore = create<FriendState>((set) => ({
       set({ loading: true });
       await friendService.acceptRequest(requestId);
 
-      set((state) => ({
-        receivedList: state.receivedList.filter((r) => r._id !== requestId),
-      }));
+      set((state) => {
+        const acceptedRequest = state.receivedList.find(
+          (r) => r._id === requestId,
+        );
+
+        
+        const newFriend = acceptedRequest?.from;
+
+        return {
+          receivedList: state.receivedList.filter((r) => r._id !== requestId),
+          friends: newFriend ? [...state.friends, newFriend] : state.friends,
+        };
+      });
     } catch (error) {
       console.error("Lỗi xảy ra khi acceptRequest", error);
+      set({ loading: false });
     }
   },
   declineRequest: async (requestId) => {
@@ -88,4 +99,11 @@ export const useFriendStore = create<FriendState>((set) => ({
       set({ loading: false });
     }
   },
+
+  unreadRequestCount: 0,
+  incrementUnreadRequest: () =>
+    set((state) => ({ unreadRequestCount: state.unreadRequestCount + 1 })),
+  clearUnreadRequest: () => set({ unreadRequestCount: 0 }),
+  addNewReceivedRequest: (newRequest) =>
+    set((state) => ({ receivedList: [newRequest, ...state.receivedList] })),
 }));

@@ -7,12 +7,13 @@ export const authMe = async (req, res) => {
   try {
     const user = req.user; // lấy từ authMiddleware
 
-    return res.status(200).json({
-      user,
-    });
+    if (!user) return response(res, 401, "Chưa xác thực!");
+
+    return response(res, 200, "Lấy thông tin thành công", { user });
+
   } catch (error) {
     console.error("Lỗi khi gọi authMe", error);
-    return res.status(500).json({ message: "Lỗi hệ thống" });
+    return response(res, 500, "Lỗi hệ thống");
   }
 };
 
@@ -30,10 +31,10 @@ export const searchUserByUsername = async (req, res) => {
 
     if (!user) return response(res, 404, "Không tìm thấy user!");
 
-    return response(res, 200, "OK", { user });
+    return response(res, 200, "Tìm thấy user thành công", { user });
   } catch (error) {
     console.error("Lỗi xảy ra khi searchUserByUsername", error);
-    return res.status(500).json({ message: "Lỗi hệ thống" });
+    return response(res, 500, "Lỗi hệ thống");
   }
 };
 
@@ -64,7 +65,7 @@ export const updateProfile = async (req, res) => {
 
     await user.save();
   
-    return response(res, 200, "Cập nhật thông tin User thành công", {
+    return response(res, 200, "Cập nhật thông tin user thành công", {
       username: user.username,
       avatarUrl: user.avatarUrl,
       bio: user.bio,

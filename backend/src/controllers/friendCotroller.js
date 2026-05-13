@@ -116,13 +116,13 @@ export const getAllFriends = async (req, res) => {
       .populate("userB", "_id username avatarUrl")
       .lean();
     
-    if (!friendships.length) return response(res, 200, "OK", { friends: [] });
+    if (!friendships.length) return response(res, 200, "Chưa có bạn", { friends: [] });
 
     const friends = friendships.map((f) => 
       f.userA._id.toString() === userId.toString() ? f.userB : f.userA
     );
 
-    return response(res, 200, "OK", { friends });
+    return response(res, 200, "Lấy danh sách bạn bè thành công", { friends });
     
   } catch (error) {
     console.error("Lỗi khi lấy danh sách bạn bè", error);

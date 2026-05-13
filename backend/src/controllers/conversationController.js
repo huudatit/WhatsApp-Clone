@@ -104,21 +104,21 @@ export const getConversations = async (req, res) => {
       .sort({ lastMessageAt: -1, updatedAt: -1 })
       .populate({
         path: "participants.userId",
-        select: "displayName avatarUrl",
+        select: "username avatarUrl",
       })
       .populate({
         path: "lastMessage.senderId",
-        select: "displayName avatarUrl",
+        select: "username avatarUrl",
       })
       .populate({
         path: "seenBy",
-        select: "displayName avatarUrl",
+        select: "username avatarUrl",
       });
-
+    
     const formatted = conversations.map((convo) => {
       const participants = (convo.participants || []).map((p) => ({
         _id: p.userId?._id,
-        displayName: p.userId?.displayName,
+        username: p.userId?.username,
         avatarUrl: p.userId?.avatarUrl ?? null,
         joinedAt: p.joinedAt,
       }));
@@ -130,7 +130,7 @@ export const getConversations = async (req, res) => {
       };
     });
 
-    return res.status(200).json({ conversations: formatted });
+    return response(res, 200, "Lấy thông tin cuộc hội thoại thành công", { conversations: formatted });
   } catch (error) {
     console.error("Lỗi xảy ra khi lấy conversations", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
@@ -239,6 +239,21 @@ export const markAsSeen = async (req, res) => {
     });
   } catch (error) {
     console.error("Lỗi khi mark as seen", error);
+    return response(res, 500, "Lỗi hệ thống");
+  }
+};
+
+export const deleteConversation = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    await Conversation.findByIdAndDelete(conversationId);
+
+    await Message.deleteMany({ conversationId: conversationId });
+
+    return response(res, 200, "Xóa cuộc trò chuyện thành công");
+  } catch (error) {
+    console.error("Lỗi khi xóa cuộc trò chuyện:", error);
     return response(res, 500, "Lỗi hệ thống");
   }
 };

@@ -4,6 +4,7 @@ import { useChatStore } from "@/stores/useChatStore";
 import ChatCard from "./ChatCard";
 import GroupChatAvatar from "./GroupChatAvatar";
 import UnreadCountBadge from "./UnreadCountBadge";
+import { cn } from "@/lib/utils";
 
 export const GroupChatCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
@@ -12,6 +13,8 @@ export const GroupChatCard = ({ convo }: { convo: Conversation }) => {
     setActiveConversation,
     messages,
     fetchMessages,
+    deleteConversation, 
+    // leaveGroup,
   } = useChatStore();
 
   if (!user) return null;
@@ -19,12 +22,41 @@ export const GroupChatCard = ({ convo }: { convo: Conversation }) => {
   const unreadCount = convo.unreadCounts?.[user._id] || 0;
   const name = convo.group?.name || "Nhóm không tên";
 
+  const lastMessageObj = convo.lastMessage;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const senderData = (lastMessageObj as any)?.senderId;
+  const senderId =
+    typeof senderData === "string" ? senderData : senderData?._id;
+  const isMe = senderId === user._id;
+
+  let lastMessageDisplay = "Bắt đầu cuộc trò chuyện";
+  if (lastMessageObj) {
+    const senderName = isMe ? "Bạn" : senderData?.username || "Thành viên";
+    lastMessageDisplay = `${senderName}: ${lastMessageObj.content}`;
+  }
+
   const handleSelectConversation = async (id: string) => {
     setActiveConversation(id);
     if (!messages[id]) {
       await fetchMessages(id);
     }
   };
+
+  const handleDeleteConversation = () => {
+    if (
+      window.confirm("Bạn có chắc chắn muốn xóa lịch sử cuộc trò chuyện này?")
+    ) {
+      deleteConversation(convo._id);
+    }
+  };
+
+  // const handleLeaveGroup = () => {
+  //   if (window.confirm("Bạn có chắc chắn muốn rời khỏi nhóm này?")) {
+  //     leaveGroup(convo._id);
+  //     console.log("Rời nhóm:", convo._id);
+  //   }
+  // };
 
   const uniqueParticipants =
     convo.participants?.filter(
@@ -43,6 +75,7 @@ export const GroupChatCard = ({ convo }: { convo: Conversation }) => {
       isActive={activeConversationId === convo._id}
       onSelect={handleSelectConversation}
       unreadCount={unreadCount}
+      onDelete={handleDeleteConversation}
       leftSection={
         <>
           {unreadCount > 0 && <UnreadCountBadge unreadCount={unreadCount} />}
@@ -50,10 +83,23 @@ export const GroupChatCard = ({ convo }: { convo: Conversation }) => {
         </>
       }
       subtitle={
-        <p className="text-sm truncate text-muted-foreground">
-          {uniqueParticipants.length} thành viên
-        </p>
+        /* Sử dụng Fragment <> </> để bao bọc nhiều thẻ p */
+        <>
+          <p className="text-xs truncate text-muted-foreground/80">
+            {uniqueParticipants.length} thành viên
+          </p>
+          <p
+            className={cn(
+              "text-sm truncate",
+              unreadCount > 0
+                ? "font-medium text-foreground"
+                : "text-muted-foreground",
+            )}
+          >
+            {lastMessageDisplay}
+          </p>
+        </>
       }
     />
   );
-};
+};;

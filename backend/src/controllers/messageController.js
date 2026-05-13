@@ -7,7 +7,10 @@ import {
   updateConversationAfterCreateMessage,
 } from "../utils/messageHelper.js";
 import { io } from "../socket/index.js";
-import { uploadImageFromBuffer } from "../middlewares/uploadMiddleware.js";
+import {
+  uploadImageFromBuffer,
+  uploadToCloudinary,
+} from "../middlewares/uploadMiddleware.js";
 
 export const sendDirectMessage = async (req, res) => {
   try {
@@ -16,7 +19,7 @@ export const sendDirectMessage = async (req, res) => {
 
     let conversation;
 
-    if (!content) return response(res, 400, "Thiếu nội dung!");
+    if (!content && !req.file) return response(res, 400, "Thiếu nội dung!");
 
     if (conversationId) {
       conversation = await Conversation.findById(conversationId);
@@ -51,14 +54,14 @@ export const sendDirectMessage = async (req, res) => {
 
     let imgUrl = "";
     if (req.file) {
-      const result = await uploadImageFromBuffer(req.file.buffer);
+      const result = await uploadToCloudinary(req.file.buffer);
       imgUrl = result.secure_url;
     }
 
     const message = await Message.create({
       conversationId: conversation._id,
       senderId,
-      content,
+      content: content || "",
       imgUrl,
     });
 
@@ -76,22 +79,28 @@ export const sendDirectMessage = async (req, res) => {
 
 export const sendGroupMessage = async (req, res) => {
   try {
-    const { conversationId, content } = req.body;
+    let { conversationId, content } = req.body;
     const senderId = req.user._id;
-    const conversation = req.conversation;
 
-    if (!content) return response(res, 400, "Thiếu nội dung!");
+    if (Array.isArray(conversationId)) {
+      conversationId = conversationId[0]; // Chỉ lấy phần tử đầu tiên
+    }
+
+    let conversation =
+      req.conversation || (await Conversation.findById(conversationId));
+    if (!conversation) return response(res, 404, "Không tìm thấy nhóm!");
+    if (!content && !req.file) return response(res, 400, "Thiếu nội dung!");
 
     let imgUrl = "";
     if (req.file) {
-      const result = await uploadImageFromBuffer(req.file.buffer);
+      const result = await uploadToCloudinary(req.file.buffer);
       imgUrl = result.secure_url;
     }
 
     const message = await Message.create({
       conversationId,
       senderId,
-      content,
+      content: content || "",
       imgUrl,
     });
 
