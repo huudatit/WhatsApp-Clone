@@ -191,7 +191,7 @@ export const refreshToken = async (req, res) => {
       { expiresIn: ACCESS_TOKEN_TTL }
     );
 
-    return response(res, 200, accessToken);
+    return response(res, 200, "Làm mới token thành công", { accessToken });
   } catch (error) {
     console.error("Lỗi khi gọi refreshToken", error);
     return response(res, 500, "Lỗi hệ thống");

@@ -64,7 +64,7 @@ const NewGroupChatModal = () => {
 
   const filteredFriends = friends.filter(
     (friend) =>
-      friend.displayName.toLowerCase().includes(search.toLowerCase()) &&
+      friend.username.toLowerCase().includes(search.toLowerCase()) &&
       !invitedUsers.some((u) => u._id === friend._id),
   );
 

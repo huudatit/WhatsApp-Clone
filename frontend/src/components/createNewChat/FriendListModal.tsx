@@ -40,7 +40,7 @@ const FriendListModal = () => {
                 <div className="relative">
                   <UserAvatar
                     type="sidebar"
-                    name={friend.displayName}
+                    name={friend.username}
                     avatarUrl={friend.avatarUrl}
                   />
                 </div>
@@ -48,7 +48,7 @@ const FriendListModal = () => {
                 {/* info */}
                 <div className="flex-1 min-w-0 flex flex-col">
                   <h2 className="font-semibold text-sm truncate">
-                    {friend.displayName}
+                    {friend.username}
                   </h2>
                   <span className="text-sm text-muted-foreground">
                     @{friend.username}

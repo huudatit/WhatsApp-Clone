@@ -48,12 +48,16 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
               <>
                 <UserAvatar
                   type={"sidebar"}
-                  name={otherUser?.displayName || "Moji"}
+                  name={otherUser?.username || "WSC"}
                   avatarUrl={otherUser?.avatarUrl || undefined}
                 />
                 {/* todo: socket io */}
                 <StatusBadge
-                  status={onlineUsers.includes(otherUser?._id ?? "") ? "online" : "offline"}
+                  status={
+                    onlineUsers.includes(otherUser?._id ?? "")
+                      ? "online"
+                      : "offline"
+                  }
                 />
               </>
             ) : (
@@ -66,7 +70,7 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
 
           {/* name */}
           <h2 className="font-semibold text-foreground">
-            {chat.type === "direct" ? otherUser?.displayName : chat.group?.name}
+            {chat.type === "direct" ? otherUser?.username : chat.group?.name}
           </h2>
         </div>
       </div>

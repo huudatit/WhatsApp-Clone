@@ -3,7 +3,7 @@ import api from "@/lib/axios";
 export const friendService = {
   async searchByUsername(username: string) {
     const res = await api.get(`/users/search?username=${username}`);
-    return res.data.user;
+    return res.data.data.user;
   },
 
   async sendFriendRequest(to: string, message?: string) {
@@ -14,7 +14,7 @@ export const friendService = {
   async getAllFriendRequest() {
     try {
       const res = await api.get("/friends/requests");
-      const { sent, received } = res.data;
+      const { sent, received } = res.data.data;
       return { sent, received };
     } catch (error) {
       console.error("Lỗi khi gửi getAllFriendRequest", error);
@@ -40,6 +40,6 @@ export const friendService = {
 
   async getFriendList() {
     const res = await api.get("/friends");
-    return res.data.friends;
+    return res.data.data.friends;
   },
 };

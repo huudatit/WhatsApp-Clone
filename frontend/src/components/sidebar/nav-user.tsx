@@ -1,4 +1,4 @@
-import { LogOutIcon } from "lucide-react";
+// import { LogOutIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   SidebarMenu,
@@ -17,15 +17,15 @@ export function NavUser({ user }: { user: User }) {
           {/* LEFT: avatar + name */}
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={user.avatarUrl} />
+              <AvatarImage src={user.avatarUrl} alt={user.username} />
               <AvatarFallback>
-                {user.displayName?.charAt(0)}
+                {user.username?.charAt(0)}
               </AvatarFallback>
             </Avatar>
 
             <div className="flex flex-col leading-tight">
               <span className="text-sm text-black font-medium truncate">
-                {user.displayName || user.username}
+                {user.username}
               </span>
               <span className="text-xs text-gray-500 truncate">
                 @{user.username}

@@ -23,10 +23,10 @@ const SelectedUsersList = ({
         >
           <UserAvatar
             type="chat"
-            name={user.displayName}
+            name={user.username}
             avatarUrl={user.avatarUrl}
           />
-          <span>{user.displayName}</span>
+          <span>{user.username}</span>
 
           <X
             className="size-3 cursor-pointer hover:text-destructive"

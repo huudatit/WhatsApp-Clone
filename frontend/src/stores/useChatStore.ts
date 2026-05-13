@@ -29,12 +29,13 @@ export const useChatStore = create<ChatState>()(
       fetchConversations: async () => {
         try {
           set({ convoLoading: true });
-          const { conversations } = await chatService.fetchConversations();
+          const response = await chatService.fetchConversations();
+          const conversations = response?.data?.conversations || []; 
 
           set({ conversations, convoLoading: false });
         } catch (error) {
           console.error("Lỗi xảy ra khi fetchConversations:", error);
-          set({ convoLoading: false });
+          set({ convoLoading: false, conversations: [] });
         }
       },
       fetchMessages: async (conversationId) => {

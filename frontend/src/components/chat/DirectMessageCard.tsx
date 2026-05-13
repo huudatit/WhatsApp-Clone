@@ -36,7 +36,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   return (
     <ChatCard
       convoId={convo._id}
-      name={otherUser.displayName ?? ""}
+      name={otherUser.username ?? ""}
       timestamp={
         convo.lastMessage?.createdAt
           ? new Date(convo.lastMessage.createdAt)
@@ -49,7 +49,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
         <>
           <UserAvatar
             type="sidebar"
-            name={otherUser.displayName ?? ""}
+            name={otherUser.username ?? ""}
             avatarUrl={otherUser.avatarUrl ?? undefined}
           />
           <StatusBadge

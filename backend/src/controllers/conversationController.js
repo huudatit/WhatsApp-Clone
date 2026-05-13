@@ -61,14 +61,14 @@ export const createConversation = async (req, res) => {
       return response(res, 400, "Conversation type không hợp lệ!");
 
     await conversation.populate([
-      { path: "participants.userId", select: "username avataUrl" },
+      { path: "participants.userId", select: "username avatarUrl" },
       { path: "seenBy", select: "username avatarUrl" },
       { path: "lastMessage.senderId", select: "username avatarUrl" },
     ]);
 
     const participants = (conversation.participants || []).map((p) => ({
       _id: p.userId?._id,
-      displayname: p.userId?.username,
+      username: p.userId?.username,
       avatarUrl: p.userId?.avatarUrl ?? null,
       joinedAt: p.joinedAt,
     }));
@@ -76,23 +76,19 @@ export const createConversation = async (req, res) => {
     const formatted = { ...conversation.toObject(), participants };
 
     if (type === "group") {
-      memberIds.forEach((userId) => {
-        io.to(userId).emit("new-group", formatted);
-      });
-    }
+      const allMembers = [userId.toString(), ...memberIds];
 
-    if (type === "group") {
-      memberIds.forEach((userId) => {
-        io.to(userId).emit("new-group", formatted);
+      allMembers.forEach((socketId) => {
+        io.to(socketId).emit("new-group", formatted);
       });
     }
 
     if (type === "direct") {
-      io.to(userId).emit("new-group", formatted);
+      io.to(userId.toString()).emit("new-group", formatted);
       io.to(memberIds[0]).emit("new-group", formatted);
     }
 
-    return response(res, 201, { conversation: formatted });
+    return response(res, 201, "Tạo conversation thành công", { conversation: formatted });
   } catch (error) {
     console.error("Lỗi khi tạo conversation", error);
     return response(res, 500, "Lỗi hệ thống");
@@ -134,7 +130,9 @@ export const getConversations = async (req, res) => {
       };
     });
 
-    return response(res, 200, { conversations: formatted });
+    return response(res, 200, "Lấy danh sách hội thoại thành công", {
+      conversations: formatted,
+    });
     
   } catch (error) {
     console.error("Lỗi xảy ra khi lấy conversations", error);
@@ -165,7 +163,10 @@ export const getMessages = async (req, res) => {
 
     messages = messages.reverse();
 
-    return response(res, 200, { messages, nextCursor });
+    return response(res, 200, "Lấy tin nhắn thành công", {
+      messages,
+      nextCursor,
+    });
 
   } catch (error) {
     console.error("Lỗi xảy ra khi lấy messages", error);
@@ -204,6 +205,10 @@ export const markAsSeen = async (req, res) => {
       return response(res, 200, "Không có tin nhắn để mark as seen");
     }
 
+    if (last.senderId.toString() === userId) {
+      return response(res, 200, "Sender không cần mark as seen");
+    }
+
     const updated = await Conversation.findByIdAndUpdate(
       conversationId,
       {
@@ -215,7 +220,7 @@ export const markAsSeen = async (req, res) => {
       },
     );
 
-    io.to(conversationId.emit("read-message", {
+    io.to(conversationId).emit("read-message", {
       conversation: updated,
       lastMessage: {
         _id: updated?.lastMessage._id,
@@ -225,9 +230,9 @@ export const markAsSeen = async (req, res) => {
           _id: updated?.lastMessage.senderId,
         },
       },
-    }));
+    });
 
-    return response(res, 200, {
+    return response(res, 200, "Đã xem", {
       message: "Marked as seen",
       seenBy: updated?.seenBy || [],
       myUnreadCount: updated?.unreadCounts[userId] || 0,

@@ -22,22 +22,26 @@ import {
 import { useAuthStore } from "@/stores/useAuthStore";
 import ConversationSkeleton from "../skeleton/ConversationSkeleton";
 import { useChatStore } from "@/stores/useChatStore";
+import { useEffect } from "react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
-  const { convoLoading } = useChatStore();
+  const { convoLoading, fetchConversations } = useChatStore();
 
-  const extractedName = user?.email ? user.email.split("@")[0] : "User";
+  useEffect(() => {
+    if (user) {
+      fetchConversations();
+    }
+  }, [user, fetchConversations]);
 
-  const currentUser = {
-    _id: user?._id || "",
-    displayName: extractedName,
-    username: `${extractedName}`,
-    email: user?.email || "",
-    avatarUrl:
-      user?.avatarUrl ||
-      `https://ui-avatars.com/api/?name=${extractedName}&background=random`,
-  };
+  // const currentUser = {
+  //   _id: user?._id || "",
+  //   username: user?.username,
+  //   email: user?.email || "",
+  //   avatarUrl:
+  //     user?.avatarUrl ||
+  //     `https://ui-avatars.com/api/?name=${user?.username}&background=random`,
+  // };
 
   return (
     <Sidebar variant="inset" className="bg-gradient-blue-300" {...props}>
@@ -109,16 +113,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           <SidebarGroupContent>
             <div className="space-y-1">
-              <DirectMessageList />
+              {convoLoading ? (
+                <>
+                  <ConversationSkeleton />
+                  <ConversationSkeleton />
+                </>
+              ) : (
+                <DirectMessageList />
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter>
-        <NavUser user={currentUser} />
-      </SidebarFooter>
+      <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
     </Sidebar>
   );
 }
