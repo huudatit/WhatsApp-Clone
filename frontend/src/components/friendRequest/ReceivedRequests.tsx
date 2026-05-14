@@ -46,6 +46,7 @@ const ReceivedRequests = () => {
                 variant="primary"
                 onClick={() => handleAccept(req._id)}
                 disabled={loading}
+                className="cursor-pointer"
               >
                 Chấp nhận
               </Button>
@@ -54,6 +55,7 @@ const ReceivedRequests = () => {
                 variant="destructiveOutline"
                 onClick={() => handleDecline(req._id)}
                 disabled={loading}
+                className="cursor-pointer"
               >
                 Từ chối
               </Button>

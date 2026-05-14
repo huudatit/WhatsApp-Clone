@@ -37,7 +37,7 @@ const SearchForm = ({
         <Input
           id="username"
           placeholder="Gõ tên username vào đây..."
-          className="glass border-border/50 focus:border-primary/50 transition-smooth"
+          className="glass border-border/50 focus:border-blue-200 transition-smooth"
           {...register("username", {
             required: "Username không được bỏ trống",
           })}
@@ -59,7 +59,7 @@ const SearchForm = ({
           <Button
             type="button"
             variant="outline"
-            className="flex-1 glass hover:text-destructive"
+            className="flex-1 glass hover:text-destructive cursor-pointer"
             onClick={onCancel}
           >
             Cancel
@@ -68,7 +68,7 @@ const SearchForm = ({
         <Button
           type="submit"
           disabled={loading || !usernameValue?.trim()}
-          className="flex-1 bg-gradient-chat text-white hover:opacity-90 transition-smooth"
+          className="flex-1 bg-blue-500 text-white hover:accent-blue-800 transition-smooth cursor-pointer"
         >
           {loading ? (
             <span>Đang tìm ...</span>
