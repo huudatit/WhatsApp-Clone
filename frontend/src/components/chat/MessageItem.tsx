@@ -104,7 +104,7 @@ const MessageItem = ({
                 className={cn(
                   "text-[10px] px-1.5 py-0 h-4 border-0",
                   lastMessageStatus === "seen"
-                    ? "bg-primary/10 text-primary"
+                    ? "bg-blue-500 text-white"
                     : "bg-muted/50 text-muted-foreground",
                 )}
               >

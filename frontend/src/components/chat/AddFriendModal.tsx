@@ -96,7 +96,7 @@ const AddFriendModal = () => {
       </SidebarGroupAction>
 
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        <DialogContent className="sm:max-w-106.25 border-none">
+        <DialogContent className="sm:max-w-106.25 border-none cursor-pointer">
           <DialogHeader>
             <DialogTitle>Kết Bạn</DialogTitle>
           </DialogHeader>

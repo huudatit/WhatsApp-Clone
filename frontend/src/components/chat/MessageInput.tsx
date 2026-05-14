@@ -100,7 +100,7 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
         <Button
           variant="ghost"
           size="icon"
-          className="hover:bg-primary/10 transition-smooth"
+          className="hover:bg-primary/10 transition-smooth cursor-pointer"
           onClick={() => fileInputRef.current?.click()} // Khi click vào Icon -> Kích hoạt Input ẩn
         >
           <ImagePlus
@@ -138,7 +138,7 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
         <Button
           onClick={sendMessage}
           // Đổi sang bg-blue-600 và hiệu ứng hover tối màu hơn một chút (blue-700)
-          className="bg-blue-600 hover:bg-blue-700 shadow-sm transition-smooth hover:scale-105"
+          className="bg-blue-600 hover:bg-blue-700 shadow-sm transition-smooth hover:scale-105 cursor-pointer"
           disabled={!value.trim() && !file}
         >
           <Send className="size-4 text-white" />

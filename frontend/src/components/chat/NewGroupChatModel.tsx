@@ -95,7 +95,7 @@ const NewGroupChatModal = () => {
             <Input
               id="groupName"
               placeholder="Gõ tên nhóm vào đây..."
-              className="glass border-border/50 focus:border-primary/50 transition-smooth"
+              className="glass border-border/50 focus:border-blue-100 transition-smooth"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
               required
@@ -135,7 +135,7 @@ const NewGroupChatModal = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-gradient-chat text-white hover:opacity-90 transition-smooth"
+              className="flex-1 bg-blue-500 text-white hover:accent-blue-800 transition-smooth cursor-pointer"
             >
               {loading ? (
                 <span>Đang tạo...</span>

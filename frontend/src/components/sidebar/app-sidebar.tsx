@@ -127,7 +127,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {/* Logo Profile bên trái */}
           <button
             onClick={() => setIsProfileOpen(true)}
-            className="hover:opacity-80 transition-opacity"
+            className="hover:opacity-80 transition-opacity cursor-pointer"
           >
             <UserAvatar
               name={user?.username || ""}
@@ -144,7 +144,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               clearUnreadRequest(); 
             }}
           >
-            <Bell size={24} className="text-slate-600 dark:text-slate-300" />
+            <Bell size={24} className="text-slate-600 dark:text-slate-300 cursor-pointer" />
 
             {unreadRequestCount > 0 && (
               <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-gray-900">
