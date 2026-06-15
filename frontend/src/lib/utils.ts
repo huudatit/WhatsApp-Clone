@@ -22,7 +22,7 @@ export const formatOnlineTime = (date: Date) => {
   } else if (diffDays < 30) {
     return `${diffDays}d`; // 1d, 12d
   } else if (diffMonths < 12) {
-    return `${diffMonths}m`; // 1m, 2m, 11m
+    return `${diffMonths}mo`; // 1m, 2m, 11m
   } else {
     return `${diffYears}y`; // 1y, 2y
   }
