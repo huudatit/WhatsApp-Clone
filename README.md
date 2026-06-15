@@ -32,12 +32,7 @@ The **WhatsApp Clone** project is a full-stack system that enables users to comm
 * [https://whats-app-clone-kohl.vercel.app/](https://whats-app-clone-kohl.vercel.app/)
 
 ## Demo
-*(Add images or GIF animations demonstrating your product here)*
-
-## Documentation
-Detailed architecture, Database Schema design, and Data Flow have been thoroughly documented. See more at:
-* [Project Documentation](./PROJECT_DOCUMENTATION.md)
-* [Folder Structure](./FOLDER_STRUCTURE.md)
+<img width="1918" height="1034" alt="image" src="https://github.com/user-attachments/assets/9b99e7aa-bf2f-4775-8684-3b0b90f1240e" />
 
 ## Installation
 **Clone the repository:**
