@@ -42,7 +42,7 @@ Detailed architecture, Database Schema design, and Data Flow have been thoroughl
 ## Installation
 **Clone the repository:**
 ```bash
-git clone [https://github.com/huudatit/WhatsApp-Clone](https://github.com/huudatit/WhatsApp-Clone)
+git clone https://github.com/huudatit/WhatsApp-Clone
 cd whatsapp-clone
 ```
 
