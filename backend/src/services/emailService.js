@@ -1,39 +1,14 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4, // ép IPv4
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("Kết nối Gmail service thất bại!");
-  } else {
-    console.log("Kết nối Gmail service thành công và sẵn sàng gửi");
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendOtpToEmail = async (email, otp) => {
   const html = `
     <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-      <h2 style="color: #075e54;">🔐 WhatsApp Web Verification</h2>
+      <h2 style="color: #075e54;">WhatsApp Web Verification</h2>
       
       <p>Hi there,</p>
       
@@ -55,10 +30,18 @@ export const sendOtpToEmail = async (email, otp) => {
     </div>
   `;
 
-  await transporter.sendMail({
-    from: `whatsapp web < ${process.env.EMAIL_USER}`,
-    to: email,
-    subject: 'tour WhatsApp Verification Code',
-    html,
-  })
+  try {
+    const data = await resend.emails.send({
+      from: "WhatsApp Clone <onboarding@resend.dev>",
+      to: email,
+      subject: "Your WhatsApp Clone Verification Code",
+      html: html,
+    });
+
+    console.log("Email gửi thành công qua Resend:", data);
+    return data;
+  } catch (error) {
+    console.error("Lỗi khi gửi email qua Resend:", error);
+    throw error; 
+  }
 };
